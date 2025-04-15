@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export function DropSessionRow({
   session,
   onClick,
 }: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   session: any;
   onClick: () => void;
 }) {

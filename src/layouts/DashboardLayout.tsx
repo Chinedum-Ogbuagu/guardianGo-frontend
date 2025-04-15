@@ -10,7 +10,6 @@ export default function DashboardLayout() {
   return (
     <DashboardProvider>
       <div className="h-screen flex flex-row overflow-hidden">
-        {/* Sidebar - Column 1 */}
         <aside className="w-40 border-r p-4 flex flex-col justify-between bg-muted">
           <SidebarStats />
           <div className="mt-4">
@@ -18,13 +17,11 @@ export default function DashboardLayout() {
           </div>
         </aside>
 
-        {/* Main Table - Column 2 */}
         <main className="flex-1 overflow-y-auto p-6 border-r">
           <DropSessionTable />
         </main>
 
-        {/* Detail Panel - Column 3 */}
-        <section className="w-2xl p-4 overflow-y-auto">
+        <section className="w-[28rem] p-4 overflow-y-auto">
           <SessionDetailPanel />
         </section>
       </div>
