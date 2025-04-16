@@ -6,6 +6,7 @@ import { DropSessionSearch } from "./DropSessionSearch";
 import { DropSessionRow } from "./DropSessionRow";
 import { useState } from "react";
 import { Card } from "./ui/card";
+import { MOCK_SESSIONS } from "@/dummyData/MockSessions";
 import {
   Table,
   TableBody,
@@ -15,89 +16,6 @@ import {
   TableRow,
 } from "./ui/table";
 import { Calendar } from "lucide-react";
-
-const MOCK_SESSIONS = [
-  {
-    code: "ABC123",
-    guardianName: "Mr. Johnson",
-    phone: "08011223344",
-    childCount: 2,
-    status: "awaiting",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    code: "XYZ789",
-    guardianName: "Mrs. Chioma",
-    phone: "09099887766",
-    childCount: 1,
-    status: "picked_up",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    code: "LMN456",
-    guardianName: "Mr. Adewale",
-    phone: "08134567890",
-    childCount: 3,
-    status: "awaiting",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    code: "JKL321",
-    guardianName: "Mrs. Uche",
-    phone: "07056789012",
-    childCount: 2,
-    status: "picked_up",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    code: "DEF789",
-    guardianName: "Mr. Obi",
-    phone: "08033445566",
-    childCount: 1,
-    status: "awaiting",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    code: "GHJ567",
-    guardianName: "Mrs. Amina",
-    phone: "09077665544",
-    childCount: 2,
-    status: "awaiting",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    code: "QWE234",
-    guardianName: "Mr. Bello",
-    phone: "08022334455",
-    childCount: 4,
-    status: "picked_up",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    code: "RTY678",
-    guardianName: "Mrs. Grace",
-    phone: "08111223344",
-    childCount: 2,
-    status: "awaiting",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    code: "UIO890",
-    guardianName: "Mr. Musa",
-    phone: "07099887766",
-    childCount: 1,
-    status: "picked_up",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    code: "ASD345",
-    guardianName: "Mrs. Ezinne",
-    phone: "09012345678",
-    childCount: 3,
-    status: "awaiting",
-    createdAt: new Date().toISOString(),
-  },
-];
 
 export function DropSessionTable({ onRowClick }) {
   const [search, setSearch] = useState("");

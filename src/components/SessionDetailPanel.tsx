@@ -14,12 +14,16 @@ import {
 } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { NewDropOffForm } from "./NewDropOffForm";
+import { ConfirmPickupPanel } from "./ConfirmPickupPanel";
 
 export function SessionDetailPanel() {
-  const { activeSession } = useDashboardContext();
+  const { activeSession, setActiveSession } = useDashboardContext();
 
   if (activeSession === "new") {
     return <NewDropOffForm />;
+  }
+  if (activeSession?.status === "otp_verification") {
+    return <ConfirmPickupPanel session={activeSession} />;
   }
 
   if (!activeSession) {
@@ -187,7 +191,12 @@ export function SessionDetailPanel() {
       {isAwaitingPickup && (
         <div className="p-6 pt-4 mt-auto">
           <Separator className="mb-4" />
-          <Button className="w-full bg-green-600 hover:bg-green-700 text-white h-12">
+          <Button
+            className="w-full bg-green-600 hover:bg-green-700 text-white h-12"
+            onClick={() =>
+              setActiveSession({ ...activeSession, status: "otp_verification" })
+            }
+          >
             <CheckCircle className="mr-2 h-5 w-5" /> Confirm Pickup
           </Button>
         </div>
