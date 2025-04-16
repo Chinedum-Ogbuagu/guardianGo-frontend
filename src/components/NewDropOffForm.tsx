@@ -40,7 +40,7 @@ export function NewDropOffForm() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 p-4">
       <h2 className="text-lg font-semibold">New Drop-Off</h2>
 
       <Input

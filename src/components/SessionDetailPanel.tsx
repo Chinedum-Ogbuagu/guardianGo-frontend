@@ -50,6 +50,12 @@ export function SessionDetailPanel() {
         note: "Allergic to peanuts",
       },
       { name: "Emeka", className: "Nursery", hasBag: false, note: "" },
+      {
+        name: "Johnson",
+        className: "Toddlers",
+        hasBag: true,
+        note: "Allergic to water",
+      },
     ],
     createdAt,
   } = activeSession;
@@ -58,8 +64,8 @@ export function SessionDetailPanel() {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="p-6 pb-0">
-        <div className="flex justify-between items-start mb-6">
+      <div className="p-4 pb-0">
+        <div className="flex justify-between items-start mb-4">
           <div>
             <h2 className="text-2xl font-semibold">Drop Session</h2>
             <p className="text-muted-foreground text-sm">
@@ -79,14 +85,14 @@ export function SessionDetailPanel() {
           </div>
         </div>
 
-        <Card className="mb-6">
-          <CardHeader className="pb-2">
+        <Card className="mb-6 py-4">
+          <CardHeader className="pb-1">
             <CardTitle className="text-lg flex items-center">
               <User className="mr-2 h-5 w-5" />
               Guardian Information
             </CardTitle>
           </CardHeader>
-          <CardContent className="pb-4">
+          <CardContent className="pb-2">
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <div className="text-xs text-muted-foreground mb-1">NAME</div>
