@@ -18,6 +18,8 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useDashboardContext } from "./dashboard-context";
 import { Checkbox } from "./ui/checkbox";
+import { Trash2Icon } from "lucide-react";
+import { useCreateDropOff } from "@/features/dropoff/services/dropoff.service";
 
 const formSchema = z.object({
   phone: z.string().min(11, "Phone number must be at least 11 digits"),
@@ -36,6 +38,9 @@ const formSchema = z.object({
 
 export function NewDropOffForm() {
   const { setActiveSession } = useDashboardContext();
+  const churchID = 1;
+  const { mutateAsync: createDropOff, isPending: isSubmitting } =
+    useCreateDropOff();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -46,18 +51,40 @@ export function NewDropOffForm() {
     },
   });
 
-  const { control, handleSubmit } = form;
+  const { control, handleSubmit, reset } = form; // Get reset here
 
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "children",
   });
 
-  const onSubmit = (data: any) => {
-    console.log(data);
-    setActiveSession(null);
-    toast.success("New drop-off created successfully", {
-      description: "The drop-off has been added to the system.",
+  const onSubmit = async (data: any) => {
+    const payload = {
+      church_id: churchID,
+      guardian: {
+        name: data.guardian,
+        phone: data.phone,
+      },
+      children: data.children.map((child: any) => ({
+        name: child.name,
+        class: child.className,
+        bag: child.hasBag,
+        note: child.note,
+      })),
+    };
+
+    return toast.promise(createDropOff(payload), {
+      loading: "Creating Drop-Off...",
+      success: () => {
+        setActiveSession(null);
+        reset(); // Clear the form
+        return "Drop-off created successfully!";
+      },
+      error: (err) => {
+        return `Failed to create drop-off: ${
+          err.message || "Please try again."
+        }`;
+      },
     });
   };
 
@@ -98,8 +125,9 @@ export function NewDropOffForm() {
           {fields.map((field, index) => (
             <div
               key={field.id}
-              className="border p-4 rounded-xl bg-muted space-y-4"
+              className="border p-4 rounded-xl bg-muted space-y-4 relative" // Added relative for positioning
             >
+              <h3 className="text-sm font-semibold">Child #{index + 1}</h3>
               <FormField
                 control={control}
                 name={`children.${index}.name`}
@@ -160,6 +188,17 @@ export function NewDropOffForm() {
                   </FormItem>
                 )}
               />
+              {fields.length > 1 && (
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="icon"
+                  className="absolute top-3 right-2 rounded-full shadow-md bg-white dark:bg-zinc-700 hover:bg-slate-100 dark:hover:bg-slate-700"
+                  onClick={() => remove(index)}
+                >
+                  <Trash2Icon className="h-4 w-4 text-red-300 " />
+                </Button>
+              )}
             </div>
           ))}
 
@@ -174,10 +213,16 @@ export function NewDropOffForm() {
           </Button>
         </div>
         <div className="flex items-center space-x-4">
-          <Button type="submit" className="flex-1">
-            Submit Drop-Off
+          <Button type="submit" className="flex-1" disabled={isSubmitting}>
+            {isSubmitting ? "Submitting..." : "Submit Drop-Off"}
           </Button>
-          <Button type="button" variant="destructive" className="flex-1">
+          <Button
+            type="button"
+            onClick={() => setActiveSession(null)}
+            variant="destructive"
+            className="flex-1"
+            disabled={isSubmitting}
+          >
             Discard
           </Button>
         </div>

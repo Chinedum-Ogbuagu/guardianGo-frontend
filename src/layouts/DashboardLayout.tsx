@@ -28,7 +28,7 @@ export default function DashboardLayout() {
 
   return (
     <DashboardProvider>
-      <div className="h-screen flex flex-col md:flex-row overflow-hidden bg-slate-100 dark:bg-background">
+      <div className="h-screen flex flex-col md:flex-row overflow-none bg-slate-100 dark:bg-background">
         {/* Mobile sidebar toggle */}
         {isMobile && (
           <div className="bg-slate-50 dark:bg-background border-b py-3 px-4 flex items-center justify-between shadow-sm">

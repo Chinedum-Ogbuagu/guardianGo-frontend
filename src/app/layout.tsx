@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 
 import "./globals.css";
+import QueryProvider from "@/lib/QueryProvider";
 
 const ibmPlexSans = IBM_Plex_Sans({
   weight: ["400", "600"],
@@ -33,7 +34,7 @@ export default function RootLayout({
         className={`${ibmPlexSans.variable} ${ibmPlexMono.variable} antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
+          <QueryProvider>{children}</QueryProvider>
         </ThemeProvider>
         <Toaster position="top-right" richColors />
       </body>
