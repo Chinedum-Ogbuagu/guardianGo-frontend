@@ -112,6 +112,90 @@
   --sidebar-ring: oklch(0.552 0.016 285.938);
 }
 
+@keyframes blink {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    text-shadow: 0 0 0px rgba(168, 85, 247, 0.6);
+  }
+  50% {
+    text-shadow: 0 0 8px rgba(168, 85, 247, 0.9);
+  }
+}
+
+@keyframes fadeInSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  width: 5px;
+  height: 1em;
+  background-color: #a855f7; /* purple-500 */
+  animation: blink 1s steps(2, start) infinite;
+  margin-left: 2px;
+}
+
+.typewriter-word {
+  display: inline-block;
+  width: 8ch; /* Fixed width */
+  text-align: left;
+  animation: pulseGlow 3s ease-in-out infinite;
+  color: var(--color-primary);
+}
+
+.typewriter-line {
+  animation: fadeInSlideUp 1s ease forwards;
+  opacity: 0; /* until animation plays */
+}
+
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 8px;
+  border: 2px solid #fff;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 1s ease-in-out;
+}
+
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

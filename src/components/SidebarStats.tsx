@@ -3,13 +3,14 @@
 import {
   Home,
   Users,
-  Calendar,
   ClipboardList,
   Settings,
   LogOut,
   Sun,
   Moon,
   HelpCircle,
+  UserPlus,
+  Crown,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import {
@@ -25,143 +26,157 @@ export function SidebarStats() {
 
   return (
     <TooltipProvider delayDuration={300}>
-      <div className="flex flex-col h-full py-6 items-center">
-        {/* Logo */}
-        <div className="mb-8">
-          <div className="h-8 w-8 rounded-md bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm">
-            LS
-          </div>
-        </div>
-
+      <div className="flex flex-col h-full items-center py-2">
         {/* Main Nav Icons */}
-        <div className="flex flex-col items-center space-y-4">
+        <div className="flex flex-col items-center space-y-4 w-full">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" className="bg-muted">
-                <Home className="h-5 w-5" />
-              </Button>
+              <div className="flex flex-col items-center">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="bg-muted h-auto py-2"
+                >
+                  <Home className="h-5 w-5" />
+                </Button>
+                <span className="text-xs mt-1">Dashboard</span>
+              </div>
             </TooltipTrigger>
             <TooltipContent side="right">
-              <p>Dashboard</p>
+              <p>View dashboard</p>
             </TooltipContent>
           </Tooltip>
 
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Users className="h-5 w-5" />
-              </Button>
+              <div className="flex flex-col items-center">
+                <Button variant="ghost" size="icon" className="h-auto py-2">
+                  <Users className="h-5 w-5" />
+                </Button>
+                <span className="text-xs mt-1">Children</span>
+              </div>
             </TooltipTrigger>
             <TooltipContent side="right">
-              <p>Children</p>
+              <p>Manage children</p>
             </TooltipContent>
           </Tooltip>
 
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Calendar className="h-5 w-5" />
-              </Button>
+              <div className="flex flex-col items-center">
+                <Button variant="ghost" size="icon" className="h-auto py-2">
+                  <ClipboardList className="h-5 w-5" />
+                </Button>
+                <span className="text-xs mt-1">Reports</span>
+              </div>
             </TooltipTrigger>
             <TooltipContent side="right">
-              <p>Schedule</p>
-            </TooltipContent>
-          </Tooltip>
-
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <ClipboardList className="h-5 w-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="right">
-              <p>Reports</p>
+              <p>View reports</p>
             </TooltipContent>
           </Tooltip>
         </div>
 
-        {/* Stats Indicators (Small Dots) */}
-        <div className="mt-8 relative">
+        {/* Additional Options */}
+        <div className="mt-8 w-full space-y-6">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" className="relative">
-                <Users className="h-5 w-5" />
-                <span className="absolute top-0 right-0 h-2 w-2 bg-primary rounded-full"></span>
-              </Button>
+              <div className="flex flex-col items-center">
+                <Button variant="ghost" size="icon" className="h-auto py-2">
+                  <UserPlus className="h-5 w-5" />
+                </Button>
+                <span className="text-xs mt-1">Invite</span>
+              </div>
             </TooltipTrigger>
             <TooltipContent side="right">
-              <p>12 Drop-offs today</p>
+              <p>Invite new users</p>
             </TooltipContent>
           </Tooltip>
 
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" className="mt-4 relative">
-                <ClipboardList className="h-5 w-5" />
-                <span className="absolute top-0 right-0 h-2 w-2 bg-amber-500 rounded-full"></span>
-              </Button>
+              <div className="flex flex-col items-center">
+                <Button variant="ghost" size="icon" className="h-auto py-2">
+                  <Crown className="h-5 w-5" />
+                </Button>
+                <span className="text-xs mt-1">Upgrade</span>
+              </div>
             </TooltipTrigger>
             <TooltipContent side="right">
-              <p>4 Pending pickups</p>
+              <p>Upgrade your plan</p>
             </TooltipContent>
           </Tooltip>
         </div>
 
         {/* Bottom Actions */}
-        <div className="mt-auto space-y-4">
+        <div className="mt-auto w-full space-y-6 pb-2">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              >
-                {theme === "dark" ? (
-                  <Sun className="h-5 w-5" />
-                ) : (
-                  <Moon className="h-5 w-5" />
-                )}
-              </Button>
+              <div className="flex flex-col items-center">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-auto py-2"
+                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                >
+                  {theme === "dark" ? (
+                    <Sun className="h-5 w-5" />
+                  ) : (
+                    <Moon className="h-5 w-5" />
+                  )}
+                </Button>
+                <span className="text-xs mt-1">
+                  {theme === "dark" ? "Light" : "Dark"}
+                </span>
+              </div>
             </TooltipTrigger>
             <TooltipContent side="right">
-              <p>Toggle theme</p>
+              <p>Switch to {theme === "dark" ? "light" : "dark"} mode</p>
             </TooltipContent>
           </Tooltip>
 
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <HelpCircle className="h-5 w-5" />
-              </Button>
+              <div className="flex flex-col items-center">
+                <Button variant="ghost" size="icon" className="h-auto py-2">
+                  <HelpCircle className="h-5 w-5" />
+                </Button>
+                <span className="text-xs mt-1">Help</span>
+              </div>
             </TooltipTrigger>
             <TooltipContent side="right">
-              <p>Help</p>
+              <p>Get help</p>
             </TooltipContent>
           </Tooltip>
 
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Settings className="h-5 w-5" />
-              </Button>
+              <div className="flex flex-col items-center">
+                <Button variant="ghost" size="icon" className="h-auto py-2">
+                  <Settings className="h-5 w-5" />
+                </Button>
+                <span className="text-xs mt-1">Settings</span>
+              </div>
             </TooltipTrigger>
             <TooltipContent side="right">
-              <p>Settings</p>
+              <p>Manage settings</p>
             </TooltipContent>
           </Tooltip>
 
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-red-500 hover:text-red-600 hover:bg-red-50"
-              >
-                <LogOut className="h-5 w-5" />
-              </Button>
+              <div className="flex flex-col items-center">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-auto py-2 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30"
+                >
+                  <LogOut className="h-5 w-5" />
+                </Button>
+                <span className="text-xs mt-1 text-red-500">Sign out</span>
+              </div>
             </TooltipTrigger>
             <TooltipContent side="right">
-              <p>Sign out</p>
+              <p>Sign out of your account</p>
             </TooltipContent>
           </Tooltip>
         </div>

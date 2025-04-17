@@ -60,11 +60,11 @@ export function DropSessionTable({ onRowClick }) {
           <TableHeader>
             <TableRow>
               <TableHead className="w-28">Code</TableHead>
-              <TableHead>Guardian</TableHead>
-              <TableHead>Phone</TableHead>
-              <TableHead className="w-24">Children</TableHead>
+              <TableHead className="w-52">Guardian</TableHead>
+              <TableHead className="w-32">Phone</TableHead>
+              <TableHead className="w-10">Children</TableHead>
               <TableHead className="w-32">Status</TableHead>
-              <TableHead className="w-24">Time</TableHead>
+              <TableHead className="w-32">Time</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { TableCell, TableRow } from "./ui/table";
@@ -43,7 +44,7 @@ export function DropSessionRow({
         </Badge>
       </TableCell>
       <TableCell className="text-right whitespace-nowrap">
-        <div className="flex items-center justify-end text-muted-foreground">
+        <div className="flex items-center  text-muted-foreground">
           <Clock className="h-3 w-3 mr-1" />
           {new Date(session.createdAt).toLocaleTimeString([], {
             hour: "2-digit",

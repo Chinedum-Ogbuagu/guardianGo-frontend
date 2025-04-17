@@ -31,13 +31,13 @@ export default function DashboardLayout() {
       <div className="h-screen flex flex-col md:flex-row overflow-hidden bg-slate-100 dark:bg-background">
         {/* Mobile sidebar toggle */}
         {isMobile && (
-          <div className="bg-white dark:bg-background border-b py-3 px-4 flex items-center justify-between shadow-sm">
+          <div className="bg-slate-50 dark:bg-background border-b py-3 px-4 flex items-center justify-between shadow-sm">
             <Sheet>
               <SheetTrigger asChild>
                 <Button
                   variant="outline"
                   size="icon"
-                  className="bg-white dark:bg-background hover:bg-slate-100"
+                  className="bg-slate-50 dark:bg-background hover:bg-slate-100"
                 >
                   <Menu className="h-5 w-5" />
                 </Button>
@@ -89,9 +89,9 @@ export default function DashboardLayout() {
           </aside>
 
           {/* Main content with gradient */}
-          <main className="flex-1 overflow-y-auto border-r bg-gradient-to-b from-white to-slate-100 dark:bg-gradient-to-b dark:from-slate-900 dark:to-slate-800">
-            <div className="p-5 md:p-6 h-full flex flex-col">
-              <div className="flex-none pb-4 border-b mb-5 bg-gradient-to-r from-transparent via-blue-50 to-transparent dark:from-transparent dark:via-blue-950/20 dark:to-transparent rounded-lg">
+          <main className="flex-1 overflow-y-auto border-r bg-gradient-to-b from-white to-zinc-100 dark:bg-gradient-to-b dark:from-zinc-900 dark:to-zinc-800">
+            <div className="p-3 md:p-4 h-full flex flex-col">
+              <div className="flex-none pb-4 border-b mb-5 bg-gradient-to-r from-transparent via-slate-100 to-transparent dark:from-transparent dark:via-zinc-900/20 dark:to-transparent rounded-lg">
                 <div className="px-4 py-3">
                   <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
                     Drop Sessions
@@ -101,7 +101,7 @@ export default function DashboardLayout() {
                   </p>
                 </div>
               </div>
-              <div className="flex-1 overflow-hidden bg-white/80 dark:bg-slate-900/80 rounded-lg shadow-sm backdrop-blur-sm">
+              <div className="flex-1 overflow-hidden bg-white/80 dark:bg-zinc-900/80 rounded-lg shadow-lg backdrop-blur-sm">
                 <div className="p-4">
                   <DropSessionTable
                     onRowClick={
@@ -114,7 +114,7 @@ export default function DashboardLayout() {
           </main>
 
           {/* Details panel - desktop */}
-          <section className="hidden md:block w-96 lg:w-96 xl:w-120 overflow-y-auto bg-slate-100 dark:bg-muted/30">
+          <section className="hidden md:block w-96 lg:w-96 xl:w-120 overflow-y-auto bg-gradient-to-r from-transparent via-slate-200 to-slate-50 dark:from-transparent dark:via-blue-950/20 dark:to-transparent">
             <SessionDetailPanel />
           </section>
 
