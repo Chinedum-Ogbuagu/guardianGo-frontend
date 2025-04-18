@@ -1,7 +1,7 @@
 "use client";
 
-import { TableCell, TableRow } from "./ui/table";
-import { Badge } from "./ui/badge";
+import { TableCell, TableRow } from "../../../components/ui/table";
+import { Badge } from "../../../components/ui/badge";
 import { AlertTriangle, CheckCircle, Clock } from "lucide-react";
 import { IDropSessionRow } from "@/features/dropoff/types/types.dropoff";
 

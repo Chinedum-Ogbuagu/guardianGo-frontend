@@ -1,5 +1,5 @@
 "use client";
-import { useDashboardContext } from "./dashboard-context";
+import { useDashboardContext } from "../../../lib/dashboard-context";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, Plus } from "lucide-react";

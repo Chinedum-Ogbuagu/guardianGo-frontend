@@ -8,9 +8,9 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
-import { Button } from "./ui/button";
-import { useDashboardContext } from "./dashboard-context";
-import { Badge } from "./ui/badge";
+import { Button } from "../../../components/ui/button";
+import { useDashboardContext } from "../../../lib/dashboard-context";
+import { Badge } from "../../../components/ui/badge";
 
 export function ConfirmPickupPanel() {
   const { setActiveDropSession, activeDropSession: dropSession } =

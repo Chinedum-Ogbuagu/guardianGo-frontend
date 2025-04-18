@@ -1,10 +1,10 @@
 "use client";
-import { useDashboardContext } from "./dashboard-context";
+import { useDashboardContext } from "../../../lib/dashboard-context";
 import { DropSessionStats } from "./DropSessionStats";
 import { DropSessionSearch } from "./DropSessionSearch";
 import { DropSessionRow } from "./DropSessionRow";
 import { useState, useCallback, useEffect, useRef } from "react";
-import { Card } from "./ui/card";
+import { Card } from "../../../components/ui/card";
 import {
   Table,
   TableBody,
@@ -12,7 +12,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./ui/table";
+} from "../../../components/ui/table";
 import {
   Calendar as CalendarIcon,
   Calendar as CalendarEmpty,

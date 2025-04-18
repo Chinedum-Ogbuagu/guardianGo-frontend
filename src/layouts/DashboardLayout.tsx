@@ -1,10 +1,10 @@
 "use client";
 
 import { SidebarStats } from "@/components/SidebarStats";
-import { DropSessionTable } from "@/components/DropSessionTable";
-import { SessionDetailPanel } from "@/components/SessionDetailPanel";
+import { DropSessionTable } from "@/features/dropoff/components/DropSessionTable";
+import { SessionDetailPanel } from "@/features/pickup/components/SessionDetailPanel";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
-import { DashboardProvider } from "@/components/dashboard-context";
+import { DashboardProvider } from "@/lib/dashboard-context";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, X, LayoutDashboard } from "lucide-react";

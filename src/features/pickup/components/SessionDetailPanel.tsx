@@ -1,9 +1,14 @@
 "use client";
 
-import { useDashboardContext } from "./dashboard-context";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
+import { useDashboardContext } from "../../../lib/dashboard-context";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../../components/ui/card";
+import { Badge } from "../../../components/ui/badge";
+import { Button } from "../../../components/ui/button";
 
 import {
   Users,
@@ -13,7 +18,7 @@ import {
   Briefcase,
   User,
 } from "lucide-react";
-import { NewDropOffForm } from "./NewDropOffForm";
+import { NewDropOffForm } from "../../dropoff/components/NewDropOffForm";
 import { ConfirmPickupPanel } from "./ConfirmPickupPanel";
 import { panelStateKeys } from "@/features/dropoff/types/types.dropoff";
 

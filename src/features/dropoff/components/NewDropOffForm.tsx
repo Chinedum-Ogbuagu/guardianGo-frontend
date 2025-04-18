@@ -14,11 +14,11 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
-import { useDashboardContext } from "./dashboard-context";
-import { Checkbox } from "./ui/checkbox";
+} from "../../../components/ui/form";
+import { Input } from "../../../components/ui/input";
+import { Button } from "../../../components/ui/button";
+import { useDashboardContext } from "../../../lib/dashboard-context";
+import { Checkbox } from "../../../components/ui/checkbox";
 import { Trash2Icon } from "lucide-react";
 import { useCreateDropOff } from "@/features/dropoff/services/dropoff.service";
 import { panelStateKeys } from "@/features/dropoff/types/types.dropoff";
