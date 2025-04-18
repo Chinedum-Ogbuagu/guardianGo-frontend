@@ -20,6 +20,7 @@ import { useDashboardContext } from "./dashboard-context";
 import { Checkbox } from "./ui/checkbox";
 import { Trash2Icon } from "lucide-react";
 import { useCreateDropOff } from "@/features/dropoff/services/dropoff.service";
+import { panelStateKeys } from "@/features/dropoff/types/types.dropoff";
 
 const formSchema = z.object({
   phone: z.string().min(11, "Phone number must be at least 11 digits"),
@@ -37,7 +38,7 @@ const formSchema = z.object({
 });
 
 export function NewDropOffForm() {
-  const { setActiveDropSession } = useDashboardContext() || {};
+  const { setDetailsPanelState } = useDashboardContext() || {};
   const churchID = 1;
   const { mutateAsync: createDropOff, isPending: isSubmitting } =
     useCreateDropOff();
@@ -76,7 +77,7 @@ export function NewDropOffForm() {
     return toast.promise(createDropOff(payload), {
       loading: "Creating Drop-Off...",
       success: (response) => {
-        setActiveDropSession?.(null);
+        setDetailsPanelState?.(panelStateKeys.noActiveSession);
         reset();
         return `Drop-off created successfully with reference code! ${response.unique_code}`;
       },
@@ -218,7 +219,9 @@ export function NewDropOffForm() {
           </Button>
           <Button
             type="button"
-            onClick={() => setActiveDropSession?.(null)}
+            onClick={() =>
+              setDetailsPanelState?.(panelStateKeys.noActiveSession)
+            }
             variant="destructive"
             className="flex-1"
             disabled={isSubmitting}
