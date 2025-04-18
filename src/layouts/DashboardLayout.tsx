@@ -89,7 +89,7 @@ export default function DashboardLayout() {
           </aside>
 
           {/* Main content with gradient */}
-          <main className="flex-1 overflow-y-auto border-r bg-gradient-to-b from-white to-zinc-100 dark:bg-gradient-to-b dark:from-zinc-900 dark:to-zinc-800">
+          <main className="flex-1 overflow-y-auto border-r bg-gradient-to-b from-slate to-zinc-100 dark:bg-gradient-to-b dark:from-zinc-900 dark:to-zinc-800">
             <div className="p-3 md:p-4 h-full flex flex-col">
               <div className="flex-none pb-4 border-b mb-5 bg-gradient-to-r from-transparent via-slate-100 to-transparent dark:from-transparent dark:via-zinc-900/20 dark:to-transparent rounded-lg">
                 <div className="px-4 py-3">
@@ -101,7 +101,7 @@ export default function DashboardLayout() {
                   </p>
                 </div>
               </div>
-              <div className="flex-1 overflow-hidden bg-white/80 dark:bg-zinc-900/80 rounded-lg shadow-lg backdrop-blur-sm">
+              <div className="flex-1 overflow-hidden bg-slate-50 dark:bg-zinc-900/80 rounded-lg shadow-lg backdrop-blur-sm">
                 <div className="p-4">
                   <DropSessionTable
                     onRowClick={

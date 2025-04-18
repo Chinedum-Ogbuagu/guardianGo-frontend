@@ -104,7 +104,29 @@ export function NewDropOffForm() {
             <FormItem>
               <FormLabel>Guardian Phone</FormLabel>
               <FormControl>
-                <Input placeholder="080xxxxxxxx" {...field} />
+                <Input
+                  type="tel"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  placeholder="080xxxxxxxx"
+                  {...field}
+                  onInput={(e) => {
+                    const numericValue = e.currentTarget.value.replace(
+                      /\D/g,
+                      ""
+                    );
+                    field.onChange(numericValue);
+                  }}
+                  onKeyDown={(e) => {
+                    if (
+                      !/[\d]/.test(e.key) &&
+                      e.key !== "Backspace" &&
+                      e.key !== "Delete"
+                    ) {
+                      e.preventDefault();
+                    }
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
