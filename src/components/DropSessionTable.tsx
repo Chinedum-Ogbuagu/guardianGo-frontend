@@ -4,9 +4,7 @@ import { useDashboardContext } from "./dashboard-context";
 import { DropSessionStats } from "./DropSessionStats";
 import { DropSessionSearch } from "./DropSessionSearch";
 import { DropSessionRow } from "./DropSessionRow";
-import { useState } from "react";
 import { Card } from "./ui/card";
-import { MOCK_SESSIONS } from "@/dummyData/MockSessions";
 import {
   Table,
   TableBody,
@@ -15,24 +13,31 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
-import { Calendar } from "lucide-react";
+import { Calendar, Loader2, SearchX } from "lucide-react";
+import {
+  IDropSession,
+  panelStateKeys,
+} from "@/features/dropoff/types/types.dropoff";
+import { useDropSessionsByDate } from "@/features/dropoff/services/dropoff.service";
 
-export function DropSessionTable({ onRowClick }) {
-  const [search, setSearch] = useState("");
-  const { setActiveSession } = useDashboardContext();
+export function DropSessionTable({ onRowClick }: { onRowClick?: () => void }) {
+  const { setActiveDropSession, setDetailsPanelState } =
+    useDashboardContext() || {
+      setActiveDropSession: () => {},
+    };
 
-  const filtered = MOCK_SESSIONS.filter(
-    (s) => s.phone.includes(search) || s.code.includes(search)
-  );
+  const today = new Date().toISOString().split("T")[0];
+  const { data: dropSessionsBydate = [], isLoading } =
+    useDropSessionsByDate(today);
 
-  const handleRowClick = (session) => {
-    setActiveSession(session);
+  const handleRowClick = (dropSession: IDropSession) => {
+    setDetailsPanelState?.(panelStateKeys.dropDetails);
+    setActiveDropSession(dropSession);
     if (onRowClick) onRowClick();
   };
 
   return (
     <div className="space-y-6">
-      {/* Header with Date */}
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-semibold">Drop Sessions</h2>
         <div className="flex items-center text-sm text-muted-foreground">
@@ -46,15 +51,12 @@ export function DropSessionTable({ onRowClick }) {
         </div>
       </div>
 
-      {/* Stats */}
       <DropSessionStats />
 
-      {/* Search */}
       <div className="mb-4">
-        <DropSessionSearch onChange={setSearch} />
+        <DropSessionSearch onChange={() => {}} />
       </div>
 
-      {/* Table */}
       <Card>
         <Table>
           <TableHeader>
@@ -68,21 +70,41 @@ export function DropSessionTable({ onRowClick }) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filtered.length === 0 ? (
+            {isLoading ? (
               <TableRow>
-                <TableCell
-                  colSpan={6}
-                  className="text-center py-8 text-muted-foreground"
-                >
-                  No drop sessions found
+                <TableCell colSpan={6}>
+                  <div className="flex flex-col items-center justify-center py-12">
+                    <div className="rounded-full bg-primary/10 p-6 mb-4">
+                      <Loader2 className="h-8 w-8 text-primary animate-spin" />
+                    </div>
+                    <p className="text-muted-foreground font-medium">
+                      Loading drop sessions...
+                    </p>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : dropSessionsBydate.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={6}>
+                  <div className="flex flex-col items-center justify-center py-12">
+                    <div className="rounded-full bg-primary/10 p-6 mb-4">
+                      <SearchX className="h-8 w-8 text-muted-foreground" />
+                    </div>
+                    <h3 className="text-lg font-medium mb-1">
+                      No drop sessions found
+                    </h3>
+                    <p className="text-muted-foreground text-sm">
+                      There are no drop sessions scheduled for today.
+                    </p>
+                  </div>
                 </TableCell>
               </TableRow>
             ) : (
-              filtered.map((session) => (
+              dropSessionsBydate.map((dropSession: IDropSession) => (
                 <DropSessionRow
-                  key={session.code}
-                  session={session}
-                  onClick={() => handleRowClick(session)}
+                  key={dropSession.unique_code}
+                  dropSession={dropSession}
+                  onClick={() => handleRowClick(dropSession)}
                 />
               ))
             )}

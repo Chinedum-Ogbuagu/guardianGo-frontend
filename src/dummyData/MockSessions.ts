@@ -1,4 +1,6 @@
-export const MOCK_SESSIONS = [
+import { IDropSession } from "@/features/dropoff/types/types.dropoff";
+
+export const MOCK_SESSIONS: IDropSession[] = [
   {
     code: "ABC123",
     guardianName: "Mr. Johnson",

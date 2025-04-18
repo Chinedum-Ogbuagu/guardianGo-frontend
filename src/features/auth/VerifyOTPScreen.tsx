@@ -23,7 +23,7 @@ export default function VerifyOTPScreen() {
     try {
       const isValid = await verifyOtp(phone, code);
       if (isValid) {
-        login({ phone }); // You can also load attendant details here
+        login({ phone });
         router.push("/dashboard");
       } else {
         setError("Invalid OTP");

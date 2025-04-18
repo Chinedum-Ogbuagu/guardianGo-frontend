@@ -37,7 +37,7 @@ const formSchema = z.object({
 });
 
 export function NewDropOffForm() {
-  const { setActiveSession } = useDashboardContext();
+  const { setActiveDropSession } = useDashboardContext() || {};
   const churchID = 1;
   const { mutateAsync: createDropOff, isPending: isSubmitting } =
     useCreateDropOff();
@@ -51,7 +51,7 @@ export function NewDropOffForm() {
     },
   });
 
-  const { control, handleSubmit, reset } = form; // Get reset here
+  const { control, handleSubmit, reset } = form;
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -75,10 +75,10 @@ export function NewDropOffForm() {
 
     return toast.promise(createDropOff(payload), {
       loading: "Creating Drop-Off...",
-      success: () => {
-        setActiveSession(null);
-        reset(); // Clear the form
-        return "Drop-off created successfully!";
+      success: (response) => {
+        setActiveDropSession?.(null);
+        reset();
+        return `Drop-off created successfully with reference code! ${response.unique_code}`;
       },
       error: (err) => {
         return `Failed to create drop-off: ${
@@ -218,7 +218,7 @@ export function NewDropOffForm() {
           </Button>
           <Button
             type="button"
-            onClick={() => setActiveSession(null)}
+            onClick={() => setActiveDropSession?.(null)}
             variant="destructive"
             className="flex-1"
             disabled={isSubmitting}

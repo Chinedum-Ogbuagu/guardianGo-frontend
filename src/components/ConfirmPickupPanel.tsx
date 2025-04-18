@@ -1,22 +1,30 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Input } from "./ui/input";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import { Button } from "./ui/button";
 import { useDashboardContext } from "./dashboard-context";
+import { Badge } from "./ui/badge";
 
-export function ConfirmPickupPanel({ session }) {
-  const { setActiveSession } = useDashboardContext();
+export function ConfirmPickupPanel() {
+  const { setActiveDropSession, activeDropSession: dropSession } =
+    useDashboardContext() || {};
   const [step, setStep] = useState<"start" | "otp" | "success">("start");
   const [otp, setOtp] = useState("");
-  const [timeLeft, setTimeLeft] = useState(300); // 5 min
+  const [timeLeft, setTimeLeft] = useState(300);
   const [loading, setLoading] = useState(false);
 
   const sendOTP = async () => {
     setLoading(true);
     try {
       // TODO: call backend to send OTP here
-      console.log("Sending OTP to:", session.phone);
+      console.log("Sending OTP to:", dropSession?.phone);
       setStep("otp");
       setTimeLeft(300);
     } finally {
@@ -31,7 +39,7 @@ export function ConfirmPickupPanel({ session }) {
       console.log("Verifying OTP:", otp);
       setStep("success");
       // update session state or refetch table
-      setActiveSession(null);
+      setActiveDropSession?.(null);
     } finally {
       setLoading(false);
     }
@@ -70,8 +78,10 @@ export function ConfirmPickupPanel({ session }) {
       {step === "start" && (
         <>
           <p className="text-sm text-muted-foreground">
-            An OTP will be sent to the guardian's phone number:{" "}
-            <strong>{session.phone}</strong>
+            An OTP will be sent to the guardian&apos;s phone number:{" "}
+            <Badge className="p-2 rounded-sm">
+              <strong>{dropSession?.phone}</strong>
+            </Badge>
           </p>
           <Button onClick={sendOTP} disabled={loading} className="w-full">
             {loading ? "Sending..." : "Send OTP"}
@@ -82,15 +92,26 @@ export function ConfirmPickupPanel({ session }) {
       {step === "otp" && (
         <>
           <p className="text-sm text-muted-foreground">
-            Enter the OTP sent to <strong>{session.phone}</strong>
+            Enter the OTP sent to <strong>{dropSession?.phone}</strong>
           </p>
 
-          <Input
-            placeholder="Enter OTP"
+          <InputOTP
+            maxLength={6}
+            pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
             value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-            className="font-mono text-lg tracking-widest"
-          />
+            onChange={(value) => setOtp(value)}
+          >
+            <InputOTPGroup>
+              <InputOTPSlot index={0} />
+              <InputOTPSlot index={1} />
+            </InputOTPGroup>
+            <InputOTPSeparator />
+            <InputOTPGroup>
+              <InputOTPSlot index={2} />
+              <InputOTPSlot index={3} />
+              <InputOTPSlot index={4} />
+            </InputOTPGroup>
+          </InputOTP>
 
           <div className="text-xs text-muted-foreground">
             OTP expires in: {Math.floor(timeLeft / 60)}:
@@ -107,14 +128,14 @@ export function ConfirmPickupPanel({ session }) {
           </div>
           <div className="mt-4 border-t pt-4">
             <p className="text-sm text-muted-foreground mb-2">
-              Can't verify via OTP?
+              Can&apos;t verify via OTP?
             </p>
             <Button
               variant="destructive"
               onClick={() => {
                 // TODO: call backend to log manual verify
                 setStep("success");
-                setActiveSession(null);
+                setActiveDropSession?.(null);
               }}
               className="w-full"
             >

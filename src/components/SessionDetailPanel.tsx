@@ -15,22 +15,24 @@ import {
 } from "lucide-react";
 import { NewDropOffForm } from "./NewDropOffForm";
 import { ConfirmPickupPanel } from "./ConfirmPickupPanel";
+import { panelStateKeys } from "@/features/dropoff/types/types.dropoff";
 
 export function SessionDetailPanel() {
-  const { activeSession, setActiveSession } = useDashboardContext();
+  const { detailsPanelState, setDetailsPanelState, activeDropSession } =
+    useDashboardContext() || {};
 
-  if (activeSession === "new") return <NewDropOffForm />;
-  if (activeSession?.status === "otp_verification")
-    return <ConfirmPickupPanel session={activeSession} />;
+  if (detailsPanelState === panelStateKeys.newDropSession)
+    return <NewDropOffForm />;
+  if (detailsPanelState === panelStateKeys.otp) return <ConfirmPickupPanel />;
 
-  if (!activeSession) {
+  if (!activeDropSession) {
     return (
       <div className="flex items-center justify-center h-full text-muted-foreground p-6">
         <div className="text-center space-y-2">
           <Users className="h-12 w-12 mx-auto text-muted-foreground/50" />
           <h3 className="font-medium text-lg">No Session Selected</h3>
           <p className="text-sm max-w-xs">
-            Select a session from the list to view details and manage pickup.
+            Select a session from the Table to view details and manage pickup.
           </p>
         </div>
       </div>
@@ -38,30 +40,13 @@ export function SessionDetailPanel() {
   }
 
   const {
-    code,
+    unique_code,
     guardianName,
     phone,
-    childCount,
-    status,
-    children = [
-      {
-        name: "Joshua",
-        className: "Toddlers",
-        hasBag: true,
-        note: "Allergic to peanuts",
-      },
-      { name: "Emeka", className: "Nursery", hasBag: false, note: "" },
-      {
-        name: "Johnson",
-        className: "Toddlers",
-        hasBag: true,
-        note: "Allergic to water",
-      },
-    ],
-    createdAt,
-  } = activeSession;
-
-  const isAwaitingPickup = status === "awaiting";
+    drop_offs,
+    created_at,
+    awaitingPickup: isAwaitingPickup,
+  } = activeDropSession;
 
   return (
     <div className="h-full flex flex-col">
@@ -80,7 +65,7 @@ export function SessionDetailPanel() {
               variant="outline"
               className="font-mono font-semibold text-lg px-2 py-1"
             >
-              {code}
+              {unique_code}
             </Badge>
           </div>
         </div>
@@ -106,14 +91,14 @@ export function SessionDetailPanel() {
             </div>
             <div>
               <div className="text-xs text-muted-foreground mb-1">Children</div>
-              <div className="font-medium">{childCount}</div>
+              <div className="font-medium">{drop_offs.length}</div>
             </div>
             <div>
               <div className="text-xs text-muted-foreground mb-1">
                 Timestamp
               </div>
               <div className="font-medium text-sm">
-                {new Date(createdAt).toLocaleString()}
+                {new Date(created_at).toLocaleString()}
               </div>
             </div>
           </CardContent>
@@ -145,7 +130,7 @@ export function SessionDetailPanel() {
           </div>
 
           <div className="space-y-3">
-            {children.map((child, idx) => (
+            {drop_offs.map((child, idx) => (
               <Card
                 key={idx}
                 className="border border-slate-200 dark:border-slate-800 overflow-hidden"
@@ -153,7 +138,7 @@ export function SessionDetailPanel() {
                 <div className="flex items-stretch">
                   <div
                     className={`w-1.5 ${
-                      child.hasBag ? "bg-blue-500" : "bg-gray-300"
+                      child.bag_status ? "bg-blue-500" : "bg-gray-300"
                     }`}
                   />
                   <div className="flex-1 p-4">
@@ -161,10 +146,10 @@ export function SessionDetailPanel() {
                       <div>
                         <h4 className="font-medium">{child.name}</h4>
                         <p className="text-sm text-muted-foreground">
-                          Class: {child.className}
+                          Class: {child.class}
                         </p>
                       </div>
-                      {child.hasBag && (
+                      {child.bag_status && (
                         <div className="flex items-center bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs">
                           <Briefcase className="h-3.5 w-3.5 mr-1" /> Has Bag
                         </div>
@@ -189,9 +174,9 @@ export function SessionDetailPanel() {
         <div className="p-6 border-t border-muted">
           <Button
             className="w-full bg-primary text-primary-foreground h-12"
-            onClick={() =>
-              setActiveSession({ ...activeSession, status: "otp_verification" })
-            }
+            onClick={() => {
+              setDetailsPanelState?.(panelStateKeys.otp);
+            }}
           >
             <CheckCircle className="mr-2 h-5 w-5" /> Confirm Pickup
           </Button>
