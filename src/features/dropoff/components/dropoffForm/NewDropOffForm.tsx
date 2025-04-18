@@ -49,14 +49,23 @@ export function NewDropOffForm() {
   });
   const phone = form.watch("phone");
   const { data } = useGetGuardianByPhone(phone, triggerFetch);
+  useEffect(() => {
+    // Reset the form and trigger flag when the panel is opened
+    reset({
+      phone: "",
+      guardian: "",
+      children: [{ name: "", className: "", hasBag: false, note: "" }],
+    });
+    setTriggerFetch(false);
+  }, []);
 
   useEffect(() => {
-    if (data?.guardian) {
+    if (data?.guardian && triggerFetch) {
       toast.info("Returning guardian found, pre-filling child info ✨");
       form.setValue("guardian", data.guardian.name);
     }
 
-    if (data?.children?.length) {
+    if (data?.children?.length && triggerFetch) {
       form.setValue(
         "children",
         data.children.map((child: any) => ({
@@ -71,7 +80,7 @@ export function NewDropOffForm() {
     }
 
     setTriggerFetch(false);
-  }, [data]);
+  }, [data, form]);
 
   const { control, handleSubmit, reset } = form;
 
@@ -137,6 +146,7 @@ export function NewDropOffForm() {
                   onChange={(e) => {
                     const numericOnly = e.target.value.replace(/\D/g, "");
                     field.onChange(numericOnly);
+                    setTriggerFetch(false);
                   }}
                   onBlur={() => {
                     field.onBlur();
@@ -260,9 +270,12 @@ export function NewDropOffForm() {
           </Button>
           <Button
             type="button"
-            onClick={() =>
-              setDetailsPanelState?.(panelStateKeys.noActiveSession)
-            }
+            onClick={() => {
+              setDetailsPanelState?.(panelStateKeys.noActiveSession);
+              queryClient.invalidateQueries({
+                queryKey: ["guardianDetailsByPhone"],
+              });
+            }}
             variant="destructive"
             className="flex-1"
             disabled={isSubmitting}
