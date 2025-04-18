@@ -30,14 +30,11 @@ import { formatPhoneNumber } from "./utils";
 
 export function NewDropOffForm() {
   const { setDetailsPanelState } = useDashboardContext() || {};
-  const churchID = 1;
-  const [animateFlash, setAnimateFlash] = useState(false);
-
   const queryClient = useQueryClient();
-  const { mutateAsync: createDropOff, isPending: isSubmitting } =
-    useCreateDropOff();
+  const churchID = 1;
 
-  const [triggerFetch, setTriggerFetch] = useState(false);
+  const [animateFlash, setAnimateFlash] = useState(false);
+  const [hasFetched, setHasFetched] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(dropOffSchema),
@@ -47,47 +44,66 @@ export function NewDropOffForm() {
       children: [{ name: "", className: "", hasBag: false, note: "" }],
     },
   });
+
   const phone = form.watch("phone");
-  const { data } = useGetGuardianByPhone(phone, triggerFetch);
-  useEffect(() => {
-    // Reset the form and trigger flag when the panel is opened
-    reset({
-      phone: "",
-      guardian: "",
-      children: [{ name: "", className: "", hasBag: false, note: "" }],
-    });
-    setTriggerFetch(false);
-  }, []);
-
-  useEffect(() => {
-    if (data?.guardian && triggerFetch) {
-      toast.info("Returning guardian found, pre-filling child info ✨");
-      form.setValue("guardian", data.guardian.name);
-    }
-
-    if (data?.children?.length && triggerFetch) {
-      form.setValue(
-        "children",
-        data.children.map((child: any) => ({
-          name: child.name,
-          className: child.class,
-          hasBag: child.bag,
-          note: child.note,
-        }))
-      );
-
-      setAnimateFlash(true);
-    }
-
-    setTriggerFetch(false);
-  }, [data, form]);
+  const { mutateAsync: createDropOff, isPending: isSubmitting } =
+    useCreateDropOff();
+  const { data, refetch, isSuccess, isError } = useGetGuardianByPhone(phone);
 
   const { control, handleSubmit, reset } = form;
-
   const { fields, append, remove } = useFieldArray({
     control,
     name: "children",
   });
+
+  useEffect(() => {
+    const isValidPhone = /^0\d{10}$/.test(phone);
+
+    if (phone === "") {
+      reset({
+        phone: "",
+        guardian: "",
+        children: [{ name: "", className: "", hasBag: false, note: "" }],
+      });
+      return;
+    }
+
+    if (isValidPhone) {
+      refetch();
+      setHasFetched(true);
+    }
+  }, [phone, refetch, reset]);
+
+  useEffect(() => {
+    if (!hasFetched) return;
+
+    if (isSuccess && data?.guardian) {
+      toast.info("Returning guardian found, pre-filling child info ✨");
+      form.setValue("guardian", data.guardian.name);
+
+      if (data.children?.length) {
+        form.setValue(
+          "children",
+          data.children.map((child: any) => ({
+            name: child.name,
+            className: child.class,
+            hasBag: child.bag,
+            note: child.note,
+          }))
+        );
+        setAnimateFlash(true);
+      }
+    }
+
+    if (isError) {
+      toast.info("New guardian. Please continue filling out the form.");
+
+      form.setValue("guardian", "");
+      form.setValue("children", [
+        { name: "", className: "", hasBag: false, note: "" },
+      ]);
+    }
+  }, [isSuccess, isError, data?.guardian, data?.children, form, hasFetched]);
 
   const onSubmit = async (data: any) => {
     const payload = {
@@ -133,6 +149,7 @@ export function NewDropOffForm() {
       >
         <h2 className="text-lg font-semibold">New Drop-Off</h2>
 
+        {/* Phone Field */}
         <FormField
           control={control}
           name="phone"
@@ -146,11 +163,6 @@ export function NewDropOffForm() {
                   onChange={(e) => {
                     const numericOnly = e.target.value.replace(/\D/g, "");
                     field.onChange(numericOnly);
-                    setTriggerFetch(false);
-                  }}
-                  onBlur={() => {
-                    field.onBlur();
-                    setTriggerFetch(true);
                   }}
                 />
               </FormControl>
@@ -177,9 +189,10 @@ export function NewDropOffForm() {
           {fields.map((field, index) => (
             <div
               key={field.id}
-              className="border p-4 rounded-xl bg-muted space-y-4 relative" // Added relative for positioning
+              className="border p-4 rounded-xl bg-muted space-y-4 relative"
             >
               <h3 className="text-sm font-semibold">Child #{index + 1}</h3>
+
               <FormField
                 control={control}
                 name={`children.${index}.name`}
@@ -216,7 +229,7 @@ export function NewDropOffForm() {
                     <FormLabel>Note (optional)</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="E.g. Allergic to peanuts"
+                        placeholder="e.g. Allergic to peanuts"
                         {...field}
                       />
                     </FormControl>
@@ -240,6 +253,7 @@ export function NewDropOffForm() {
                   </FormItem>
                 )}
               />
+
               {fields.length > 1 && (
                 <Button
                   type="button"
@@ -264,6 +278,7 @@ export function NewDropOffForm() {
             + Add Child
           </Button>
         </div>
+
         <div className="flex items-center space-x-4">
           <Button type="submit" className="flex-1" disabled={isSubmitting}>
             {isSubmitting ? "Submitting..." : "Submit Drop-Off"}

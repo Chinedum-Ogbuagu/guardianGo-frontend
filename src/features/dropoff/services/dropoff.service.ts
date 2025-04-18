@@ -41,11 +41,11 @@ export const useDropSessionsByDate = (date: string) => {
   });
 };
 
-export const useGetGuardianByPhone = (phone: string, enabled: boolean, options?: RQueryOptions<IGuardianWithPhone>) => {
+export const useGetGuardianByPhone = (phone: string,  options?: RQueryOptions<IGuardianWithPhone>) => {
   return useQuery({
     queryKey: ["guardianDetailsByPhone", Phone],
     queryFn: () => getGuardianByPhone(phone),
-    enabled,
+    enabled: false,
     retry: false,
     ...options
   })
