@@ -3,6 +3,7 @@
 
 import { useForm, useFieldArray } from "react-hook-form";
 import { z } from "zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
@@ -40,6 +41,7 @@ const formSchema = z.object({
 export function NewDropOffForm() {
   const { setDetailsPanelState } = useDashboardContext() || {};
   const churchID = 1;
+  const queryClient = useQueryClient();
   const { mutateAsync: createDropOff, isPending: isSubmitting } =
     useCreateDropOff();
 
@@ -77,6 +79,7 @@ export function NewDropOffForm() {
     return toast.promise(createDropOff(payload), {
       loading: "Creating Drop-Off...",
       success: (response) => {
+        queryClient.invalidateQueries({ queryKey: ["drop-sessions"] });
         setDetailsPanelState?.(panelStateKeys.noActiveSession);
         reset();
         return `Drop-off created successfully with reference code! ${response.unique_code}`;

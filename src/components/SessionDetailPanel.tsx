@@ -25,7 +25,10 @@ export function SessionDetailPanel() {
     return <NewDropOffForm />;
   if (detailsPanelState === panelStateKeys.otp) return <ConfirmPickupPanel />;
 
-  if (!activeDropSession) {
+  if (
+    !activeDropSession ||
+    detailsPanelState === panelStateKeys.noActiveSession
+  ) {
     return (
       <div className="flex items-center justify-center h-full text-muted-foreground p-6">
         <div className="text-center space-y-2">

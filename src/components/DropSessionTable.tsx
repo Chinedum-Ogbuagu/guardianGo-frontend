@@ -1,9 +1,9 @@
 "use client";
-
 import { useDashboardContext } from "./dashboard-context";
 import { DropSessionStats } from "./DropSessionStats";
 import { DropSessionSearch } from "./DropSessionSearch";
 import { DropSessionRow } from "./DropSessionRow";
+import { useState, useCallback } from "react";
 import { Card } from "./ui/card";
 import {
   Table,
@@ -13,12 +13,21 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
-import { Calendar, Loader2, SearchX } from "lucide-react";
+import { Calendar as CalendarIcon, Loader2, SearchX } from "lucide-react";
 import {
   IDropSession,
   panelStateKeys,
 } from "@/features/dropoff/types/types.dropoff";
 import { useDropSessionsByDate } from "@/features/dropoff/services/dropoff.service";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { Button } from "@/components/ui/button";
 
 export function DropSessionTable({ onRowClick }: { onRowClick?: () => void }) {
   const { setActiveDropSession, setDetailsPanelState } =
@@ -26,9 +35,16 @@ export function DropSessionTable({ onRowClick }: { onRowClick?: () => void }) {
       setActiveDropSession: () => {},
     };
 
-  const today = new Date().toISOString().split("T")[0];
-  const { data: dropSessionsBydate = [], isLoading } =
-    useDropSessionsByDate(today);
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
+  const today = format(selectedDate, "yyyy-MM-dd");
+
+  const {
+    data: dropSessionsBydate = [],
+    isLoading,
+    refetch,
+  } = useDropSessionsByDate(today);
 
   const handleRowClick = (dropSession: IDropSession) => {
     setDetailsPanelState?.(panelStateKeys.dropDetails);
@@ -36,18 +52,48 @@ export function DropSessionTable({ onRowClick }: { onRowClick?: () => void }) {
     if (onRowClick) onRowClick();
   };
 
+  const handleDateChange = useCallback(
+    (date: Date | undefined) => {
+      if (date) {
+        setSelectedDate(date);
+        setIsPopoverOpen(false);
+        refetch();
+      }
+    },
+    [refetch]
+  );
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-semibold">Drop Sessions</h2>
-        <div className="flex items-center text-sm text-muted-foreground">
-          <Calendar className="h-4 w-4 mr-2" />
-          {new Date().toLocaleDateString("en-NG", {
-            weekday: "long",
-            month: "long",
-            day: "numeric",
-            year: "numeric",
-          })}
+        <div className="flex items-center gap-4">
+          <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant={"outline"}
+                className={cn(
+                  "w-[15rem] justify-start text-left font-normal",
+                  !selectedDate && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {selectedDate ? (
+                  format(selectedDate, "PPPP")
+                ) : (
+                  <span>Pick a date</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={selectedDate}
+                onSelect={(date) => handleDateChange(date)}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
 
@@ -94,7 +140,8 @@ export function DropSessionTable({ onRowClick }: { onRowClick?: () => void }) {
                       No drop sessions found
                     </h3>
                     <p className="text-muted-foreground text-sm">
-                      There are no drop sessions scheduled for today.
+                      There are no drop sessions scheduled for{" "}
+                      {format(selectedDate, "PPPP")}.
                     </p>
                   </div>
                 </TableCell>
