@@ -44,3 +44,17 @@ export const panelStateKeys: IDetailsPanelState = {
   otp: "OTP",
   confirmOtp: "confirmOtp",
 };
+export interface IGuardianWithPhone {
+  guardian: {
+    name: string;
+    phone: string;
+  };
+  children: [
+    {
+      name: string;
+      class: string;
+      bag: boolean;
+      note: string;
+    }
+  ];
+}

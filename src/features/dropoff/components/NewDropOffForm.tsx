@@ -20,8 +20,12 @@ import { Button } from "../../../components/ui/button";
 import { useDashboardContext } from "../../../lib/dashboard-context";
 import { Checkbox } from "../../../components/ui/checkbox";
 import { Trash2Icon } from "lucide-react";
-import { useCreateDropOff } from "@/features/dropoff/services/dropoff.service";
+import {
+  useCreateDropOff,
+  useGetGuardianByPhone,
+} from "@/features/dropoff/services/dropoff.service";
 import { panelStateKeys } from "@/features/dropoff/types/types.dropoff";
+import { useEffect, useState } from "react";
 
 const formSchema = z.object({
   phone: z.string().regex(/^0\d{10}$/, {
@@ -43,9 +47,13 @@ const formSchema = z.object({
 export function NewDropOffForm() {
   const { setDetailsPanelState } = useDashboardContext() || {};
   const churchID = 1;
+  const [animateFlash, setAnimateFlash] = useState(false);
+
   const queryClient = useQueryClient();
   const { mutateAsync: createDropOff, isPending: isSubmitting } =
     useCreateDropOff();
+
+  const [triggerFetch, setTriggerFetch] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -55,6 +63,31 @@ export function NewDropOffForm() {
       children: [{ name: "", className: "", hasBag: false, note: "" }],
     },
   });
+  const phone = form.watch("phone");
+  const { data } = useGetGuardianByPhone(phone, triggerFetch);
+  console.log({ data });
+  useEffect(() => {
+    if (data?.guardian) {
+      toast.info("Returning guardian found, pre-filling child info ✨");
+      form.setValue("guardian", data.guardian.name);
+    }
+
+    if (data?.children?.length) {
+      form.setValue(
+        "children",
+        data.children.map((child: any) => ({
+          name: child.name,
+          className: child.class,
+          hasBag: child.bag,
+          note: child.note,
+        }))
+      );
+
+      setAnimateFlash(true); // trigger animation
+    }
+
+    setTriggerFetch(false);
+  }, [data]);
 
   const { control, handleSubmit, reset } = form;
 
@@ -106,7 +139,13 @@ export function NewDropOffForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-4">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className={`space-y-6 p-4 transition-all duration-700 ${
+          animateFlash ? "animate-flash" : ""
+        }`}
+        onAnimationEnd={() => setAnimateFlash(false)}
+      >
         <h2 className="text-lg font-semibold">New Drop-Off</h2>
 
         <FormField
@@ -122,6 +161,10 @@ export function NewDropOffForm() {
                   onChange={(e) => {
                     const numericOnly = e.target.value.replace(/\D/g, "");
                     field.onChange(numericOnly);
+                  }}
+                  onBlur={() => {
+                    field.onBlur();
+                    setTriggerFetch(true);
                   }}
                 />
               </FormControl>
