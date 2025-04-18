@@ -6,8 +6,6 @@ import {
   ClipboardList,
   Settings,
   LogOut,
-  Sun,
-  Moon,
   HelpCircle,
   UserPlus,
   Crown,
@@ -19,11 +17,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
-import { useTheme } from "next-themes";
+import { ThemeToggle } from "./theme/ThemeToggle";
 
 export function SidebarStats() {
-  const { theme, setTheme } = useTheme();
-
   return (
     <TooltipProvider delayDuration={300}>
       <div className="flex flex-col h-full items-center py-2">
@@ -112,25 +108,11 @@ export function SidebarStats() {
           <Tooltip>
             <TooltipTrigger asChild>
               <div className="flex flex-col items-center">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-auto py-2"
-                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                >
-                  {theme === "dark" ? (
-                    <Sun className="h-5 w-5" />
-                  ) : (
-                    <Moon className="h-5 w-5" />
-                  )}
-                </Button>
-                <span className="text-xs mt-1">
-                  {theme === "dark" ? "Light" : "Dark"}
-                </span>
+                <ThemeToggle />
               </div>
             </TooltipTrigger>
             <TooltipContent side="right">
-              <p>Switch to {theme === "dark" ? "light" : "dark"} mode</p>
+              <p>Switch theme mode</p>
             </TooltipContent>
           </Tooltip>
 
