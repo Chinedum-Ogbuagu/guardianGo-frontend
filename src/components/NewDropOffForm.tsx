@@ -24,7 +24,9 @@ import { useCreateDropOff } from "@/features/dropoff/services/dropoff.service";
 import { panelStateKeys } from "@/features/dropoff/types/types.dropoff";
 
 const formSchema = z.object({
-  phone: z.string().min(11, "Phone number must be at least 11 digits"),
+  phone: z.string().regex(/^0\d{10}$/, {
+    message: "Phone number must start with 0 and be exactly 11 digits",
+  }),
   guardian: z.string().min(2, "Guardian name is required"),
   children: z
     .array(
@@ -60,6 +62,14 @@ export function NewDropOffForm() {
     control,
     name: "children",
   });
+
+  function formatPhoneNumber(phone: string) {
+    const digits = phone.replace(/\D/g, "").slice(0, 11);
+    const part1 = digits.slice(0, 4);
+    const part2 = digits.slice(4, 7);
+    const part3 = digits.slice(7, 11);
+    return [part1, part2, part3].filter(Boolean).join(" ");
+  }
 
   const onSubmit = async (data: any) => {
     const payload = {
@@ -105,26 +115,11 @@ export function NewDropOffForm() {
               <FormLabel>Guardian Phone</FormLabel>
               <FormControl>
                 <Input
-                  type="tel"
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                  placeholder="080xxxxxxxx"
-                  {...field}
-                  onInput={(e) => {
-                    const numericValue = e.currentTarget.value.replace(
-                      /\D/g,
-                      ""
-                    );
-                    field.onChange(numericValue);
-                  }}
-                  onKeyDown={(e) => {
-                    if (
-                      !/[\d]/.test(e.key) &&
-                      e.key !== "Backspace" &&
-                      e.key !== "Delete"
-                    ) {
-                      e.preventDefault();
-                    }
+                  placeholder="0801 234 5678"
+                  value={formatPhoneNumber(field.value)}
+                  onChange={(e) => {
+                    const numericOnly = e.target.value.replace(/\D/g, "");
+                    field.onChange(numericOnly);
                   }}
                 />
               </FormControl>
