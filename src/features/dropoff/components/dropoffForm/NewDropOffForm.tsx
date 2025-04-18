@@ -2,7 +2,6 @@
 "use client";
 
 import { useForm, useFieldArray } from "react-hook-form";
-import { z } from "zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -14,11 +13,11 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
-} from "../../../components/ui/form";
-import { Input } from "../../../components/ui/input";
-import { Button } from "../../../components/ui/button";
-import { useDashboardContext } from "../../../lib/dashboard-context";
-import { Checkbox } from "../../../components/ui/checkbox";
+} from "../../../../components/ui/form";
+import { Input } from "../../../../components/ui/input";
+import { Button } from "../../../../components/ui/button";
+import { useDashboardContext } from "../../../../lib/dashboard-context";
+import { Checkbox } from "../../../../components/ui/checkbox";
 import { Trash2Icon } from "lucide-react";
 import {
   useCreateDropOff,
@@ -26,23 +25,8 @@ import {
 } from "@/features/dropoff/services/dropoff.service";
 import { panelStateKeys } from "@/features/dropoff/types/types.dropoff";
 import { useEffect, useState } from "react";
-
-const formSchema = z.object({
-  phone: z.string().regex(/^0\d{10}$/, {
-    message: "Phone number must start with 0 and be exactly 11 digits",
-  }),
-  guardian: z.string().min(2, "Guardian name is required"),
-  children: z
-    .array(
-      z.object({
-        name: z.string().min(1, "Child name is required"),
-        className: z.string().min(1, "Class is required"),
-        hasBag: z.boolean(),
-        note: z.string().optional(),
-      })
-    )
-    .min(1, "At least one child is required"),
-});
+import { dropOffSchema } from "./dropoffSchema";
+import { formatPhoneNumber } from "./utils";
 
 export function NewDropOffForm() {
   const { setDetailsPanelState } = useDashboardContext() || {};
@@ -56,7 +40,7 @@ export function NewDropOffForm() {
   const [triggerFetch, setTriggerFetch] = useState(false);
 
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(dropOffSchema),
     defaultValues: {
       phone: "",
       guardian: "",
@@ -65,7 +49,7 @@ export function NewDropOffForm() {
   });
   const phone = form.watch("phone");
   const { data } = useGetGuardianByPhone(phone, triggerFetch);
-  console.log({ data });
+
   useEffect(() => {
     if (data?.guardian) {
       toast.info("Returning guardian found, pre-filling child info ✨");
@@ -83,7 +67,7 @@ export function NewDropOffForm() {
         }))
       );
 
-      setAnimateFlash(true); // trigger animation
+      setAnimateFlash(true);
     }
 
     setTriggerFetch(false);
@@ -95,14 +79,6 @@ export function NewDropOffForm() {
     control,
     name: "children",
   });
-
-  function formatPhoneNumber(phone: string) {
-    const digits = phone.replace(/\D/g, "").slice(0, 11);
-    const part1 = digits.slice(0, 4);
-    const part2 = digits.slice(4, 7);
-    const part3 = digits.slice(7, 11);
-    return [part1, part2, part3].filter(Boolean).join(" ");
-  }
 
   const onSubmit = async (data: any) => {
     const payload = {

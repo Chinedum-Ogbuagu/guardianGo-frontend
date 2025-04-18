@@ -58,3 +58,19 @@ export interface IGuardianWithPhone {
     }
   ];
 }
+export interface DropOffChild {
+  children: {
+    className: string;
+    name: string;
+    hasBag: boolean;
+    note: string;
+  };
+}
+export interface DropOffDTO {
+  church_id: number;
+  guardian: {
+    name: string;
+    phone: string;
+  };
+  children: DropOffChild;
+}

@@ -18,7 +18,7 @@ import {
   Briefcase,
   User,
 } from "lucide-react";
-import { NewDropOffForm } from "../../dropoff/components/NewDropOffForm";
+import { NewDropOffForm } from "../../dropoff/components/dropoffForm/NewDropOffForm";
 import { ConfirmPickupPanel } from "./ConfirmPickupPanel";
 import { panelStateKeys } from "@/features/dropoff/types/types.dropoff";
 
