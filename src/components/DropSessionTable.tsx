@@ -74,6 +74,8 @@ export function DropSessionTable({ onRowClick }: { onRowClick?: () => void }) {
     refetch,
   } = useDropSessionsByDate(today);
 
+  const reversedDropSessions = [...dropSessionsBydate].reverse();
+
   // Calculate and set table height based on available space
   useEffect(() => {
     const calculateTableHeight = () => {
@@ -233,7 +235,7 @@ export function DropSessionTable({ onRowClick }: { onRowClick?: () => void }) {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  dropSessionsBydate.map((dropSession: IDropSession) => (
+                  reversedDropSessions.map((dropSession: IDropSession) => (
                     <DropSessionRow
                       key={dropSession.unique_code}
                       dropSession={dropSession}

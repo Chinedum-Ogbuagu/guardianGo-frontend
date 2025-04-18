@@ -14,8 +14,8 @@ export function DropSessionRow({ dropSession, onClick }: IDropSessionRow) {
       <TableCell className="font-medium w-28">
         {dropSession.unique_code}
       </TableCell>
-      <TableCell className="w-52">{dropSession.guardianName}</TableCell>
-      <TableCell className="w-32">{dropSession.phone}</TableCell>
+      <TableCell className="w-52">{dropSession.guardian_name}</TableCell>
+      <TableCell className="w-32">{dropSession.guardian_phone}</TableCell>
       <TableCell className="text-center w-10">
         {dropSession.drop_offs.length}
       </TableCell>

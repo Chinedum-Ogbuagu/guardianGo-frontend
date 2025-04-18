@@ -44,8 +44,8 @@ export function SessionDetailPanel() {
 
   const {
     unique_code,
-    guardianName,
-    phone,
+    guardian_name,
+    guardian_phone,
     drop_offs,
     created_at,
     awaitingPickup: isAwaitingPickup,
@@ -86,11 +86,11 @@ export function SessionDetailPanel() {
           <CardContent className="grid grid-cols-2 gap-4 text-sm">
             <div>
               <div className="text-xs text-muted-foreground mb-1">Name</div>
-              <div className="font-medium">{guardianName}</div>
+              <div className="font-medium">{guardian_name}</div>
             </div>
             <div>
               <div className="text-xs text-muted-foreground mb-1">Phone</div>
-              <div className="font-medium">{phone}</div>
+              <div className="font-medium">{guardian_phone}</div>
             </div>
             <div>
               <div className="text-xs text-muted-foreground mb-1">Children</div>

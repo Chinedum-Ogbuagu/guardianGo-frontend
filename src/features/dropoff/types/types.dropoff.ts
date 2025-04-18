@@ -2,8 +2,8 @@ export interface IDropSession {
   id: number;
   unique_code: string;
   guardian_id: number;
-  guardianName: string;
-  phone: number;
+  guardian_name: string;
+  guardian_phone: number;
   church_id: number;
   note: string;
   created_at: Date;

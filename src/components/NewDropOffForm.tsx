@@ -94,10 +94,12 @@ export function NewDropOffForm() {
         reset();
         return `Drop-off created successfully with reference code! ${response.unique_code}`;
       },
-      error: (err) => {
-        return `Failed to create drop-off: ${
-          err.message || "Please try again."
-        }`;
+      error: (error) => {
+        if (error.isAxiosError && error.response) {
+          return `Failed to create drop-off: ${
+            error.response.data.error || "Please try again."
+          }`;
+        }
       },
     });
   };

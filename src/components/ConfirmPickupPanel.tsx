@@ -24,7 +24,7 @@ export function ConfirmPickupPanel() {
     setLoading(true);
     try {
       // TODO: call backend to send OTP here
-      console.log("Sending OTP to:", dropSession?.phone);
+      console.log("Sending OTP to:", dropSession?.guardian_phone);
       setStep("otp");
       setTimeLeft(300);
     } finally {
@@ -80,7 +80,7 @@ export function ConfirmPickupPanel() {
           <p className="text-sm text-muted-foreground">
             An OTP will be sent to the guardian&apos;s phone number:{" "}
             <Badge className="p-2 rounded-sm">
-              <strong>{dropSession?.phone}</strong>
+              <strong>{dropSession?.guardian_phone}</strong>
             </Badge>
           </p>
           <Button onClick={sendOTP} disabled={loading} className="w-full">
@@ -92,7 +92,7 @@ export function ConfirmPickupPanel() {
       {step === "otp" && (
         <>
           <p className="text-sm text-muted-foreground">
-            Enter the OTP sent to <strong>{dropSession?.phone}</strong>
+            Enter the OTP sent to <strong>{dropSession?.guardian_phone}</strong>
           </p>
 
           <InputOTP
