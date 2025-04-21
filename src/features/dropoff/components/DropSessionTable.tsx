@@ -16,6 +16,8 @@ import {
 import {
   Calendar as CalendarIcon,
   Calendar as CalendarEmpty,
+  RefreshCw,
+  AlertTriangle,
 } from "lucide-react";
 import {
   IDropSession,
@@ -35,22 +37,22 @@ import { Button } from "@/components/ui/button";
 const SkeletonRow = () => (
   <TableRow className="animate-pulse">
     <TableCell>
-      <div className="h-6 w-16 p-2 bg-slate-200 dark:bg-zinc-700 shadow-inner" />
+      <div className="h-6 w-16 p-2 bg-slate-200 dark:bg-zinc-800 shadow-inner" />
     </TableCell>
     <TableCell>
-      <div className="h-6 w-32 p-2 bg-slate-200 dark:bg-zinc-700 shadow-inner" />
+      <div className="h-6 w-32 p-2 bg-slate-200 dark:bg-zinc-800 shadow-inner" />
     </TableCell>
     <TableCell>
-      <div className="h-6 w-20 p-2 bg-slate-200 dark:bg-zinc-700 shadow-inner" />
+      <div className="h-6 w-20 p-2 bg-slate-200 dark:bg-zinc-800 shadow-inner" />
     </TableCell>
     <TableCell>
-      <div className="h-6 w-8 p-2 bg-slate-200 dark:bg-zinc-700 shadow-inner" />
+      <div className="h-6 w-8 p-2 bg-slate-200 dark:bg-zinc-800 shadow-inner" />
     </TableCell>
     <TableCell>
-      <div className="h-6 w-24 p-2 bg-slate-200 dark:bg-zinc-700 shadow-inner" />
+      <div className="h-6 w-24 p-2 bg-slate-200 dark:bg-zinc-800 shadow-inner" />
     </TableCell>
     <TableCell>
-      <div className="h-6 w-18 p-2 bg-slate-200 dark:bg-zinc-700 shadow-inner" />
+      <div className="h-6 w-18 p-2 bg-slate-200 dark:bg-zinc-800 shadow-inner" />
     </TableCell>
   </TableRow>
 );
@@ -64,6 +66,7 @@ export function DropSessionTable({ onRowClick }: { onRowClick?: () => void }) {
     dropSessionsBydate,
     isLoadingDropSessionsByDate: isLoading,
     refetchDropSessionsByDate: refetch,
+    isErrorDropSessionsByDate,
   } = useDashboardContext() || {
     setActiveDropSession: () => {},
     setSelectedDate: () => {},
@@ -86,7 +89,7 @@ export function DropSessionTable({ onRowClick }: { onRowClick?: () => void }) {
         const viewportHeight = window.innerHeight;
         const tableTop = tableContainerRef.current.getBoundingClientRect().top;
         // Leave some space at the bottom (e.g., 40px)
-        const availableHeight = viewportHeight - tableTop - 40;
+        const availableHeight = viewportHeight - tableTop - 100;
         const minHeight = 200; // Minimum height
         const maxHeight = 800; // Maximum height
 
@@ -204,6 +207,35 @@ export function DropSessionTable({ onRowClick }: { onRowClick?: () => void }) {
               <TableBody>
                 {isLoading ? (
                   renderSkeletonRows()
+                ) : isErrorDropSessionsByDate ? (
+                  <TableRow>
+                    <TableCell colSpan={6}>
+                      <div className="flex flex-col items-center justify-center py-16">
+                        <div className="rounded-full bg-red-100 dark:bg-red-900/20 p-8 mb-6">
+                          <AlertTriangle className="h-12 w-12 bg-transparent text-red-600 dark:text-red-400" />
+                        </div>
+                        <h3 className="text-xl font-medium mb-2">
+                          Failed to load drop sessions
+                        </h3>
+                        <p className="text-muted-foreground text-center max-w-md mb-6">
+                          There was an error fetching drop sessions for{" "}
+                          <span className="font-medium">
+                            {format(selectedDate, "PPPP")}
+                          </span>
+                          .
+                        </p>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => refetch()}
+                          className="text-sm"
+                        >
+                          <RefreshCw className="mr-2 h-4 w-4" />
+                          Try Again
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
                 ) : dropSessionsBydate.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={6}>

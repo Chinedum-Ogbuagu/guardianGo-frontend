@@ -28,10 +28,10 @@ export function DropSessionStats() {
       <CardContent className="py-3">
         <div className="flex justify-between items-center">
           <div>
-            <Skeleton className="h-2 w-24 mb-2" />
-            <Skeleton className="h-4 w-12" />
+            <Skeleton className="h-2 bg-slate-200 dark:bg-zinc-800 w-24 mb-2" />
+            <Skeleton className="h-4 bg-slate-200 dark:bg-zinc-800 w-12" />
           </div>
-          <Skeleton className="h-8 w-8 rounded-full" />
+          <Skeleton className="h-8 w-8 bg-slate-200 dark:bg-zinc-800 rounded-full" />
         </div>
       </CardContent>
     </Card>
@@ -63,7 +63,7 @@ export function DropSessionStats() {
       )}
 
       {/* Awaiting Pickup */}
-      {isLoadingDropSessionsByDate ? (
+      {isLoadingDropSessionsByDate || isErrorDropSessionsByDate ? (
         <SkeletonCard />
       ) : (
         <Card className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-slate-800 ">
@@ -86,7 +86,7 @@ export function DropSessionStats() {
       )}
 
       {/* Picked Up */}
-      {isLoadingDropSessionsByDate ? (
+      {isLoadingDropSessionsByDate || isErrorDropSessionsByDate ? (
         <SkeletonCard />
       ) : (
         <Card className="bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-slate-800 ">
