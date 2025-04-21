@@ -1,6 +1,8 @@
 "use client";
+import { useDropSessionsByDate } from "@/features/dropoff/services/dropoff.service";
 import { IDropSession } from "@/features/dropoff/types/types.dropoff";
 import { createContext, useContext, useState } from "react";
+import { format } from "date-fns";
 
 interface DashboardContextType {
   detailsPanelState: string | null;
@@ -9,6 +11,12 @@ interface DashboardContextType {
   setActiveDropSession: React.Dispatch<
     React.SetStateAction<IDropSession | null>
   >;
+  selectedDate: Date;
+  setSelectedDate: React.Dispatch<React.SetStateAction<Date>>;
+  dropSessionsBydate: IDropSession[];
+  isLoadingDropSessionsByDate: boolean;
+  isErrorDropSessionsByDate: boolean;
+  refetchDropSessionsByDate: () => void;
 }
 
 const DashboardContext = createContext<DashboardContextType | null>(null);
@@ -23,6 +31,15 @@ export const DashboardProvider = ({
   const [detailsPanelState, setDetailsPanelState] = useState<string | null>(
     null
   );
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const today = format(selectedDate, "yyyy-MM-dd");
+
+  const {
+    data: dropSessionsBydate = [],
+    isLoading: isLoadingDropSessionsByDate,
+    isError: isErrorDropSessionsByDate,
+    refetch: refetchDropSessionsByDate,
+  } = useDropSessionsByDate(today);
 
   return (
     <DashboardContext.Provider
@@ -31,6 +48,12 @@ export const DashboardProvider = ({
         setActiveDropSession,
         detailsPanelState,
         setDetailsPanelState,
+        selectedDate,
+        setSelectedDate,
+        dropSessionsBydate,
+        isLoadingDropSessionsByDate,
+        isErrorDropSessionsByDate,
+        refetchDropSessionsByDate,
       }}
     >
       {children}

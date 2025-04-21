@@ -11,15 +11,24 @@ import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import { Button } from "../../../components/ui/button";
 import { useDashboardContext } from "../../../lib/dashboard-context";
 import { Badge } from "../../../components/ui/badge";
+import { toast } from "sonner";
+import { useConfirmPickupSession } from "../services/pickup.service";
+import { useQueryClient } from "@tanstack/react-query";
+import { panelStateKeys } from "@/features/dropoff/types/types.dropoff";
 
 export function ConfirmPickupPanel() {
-  const { setActiveDropSession, activeDropSession: dropSession } =
-    useDashboardContext() || {};
+  const {
+    setActiveDropSession,
+    activeDropSession: dropSession,
+    setDetailsPanelState,
+  } = useDashboardContext() || {};
   const [step, setStep] = useState<"start" | "otp" | "success">("start");
   const [otp, setOtp] = useState("");
   const [timeLeft, setTimeLeft] = useState(300);
   const [loading, setLoading] = useState(false);
-
+  const queryClient = useQueryClient();
+  const { mutateAsync: confirmPickup } = useConfirmPickupSession();
+  console.log({ dropSession });
   const sendOTP = async () => {
     setLoading(true);
     try {
@@ -47,6 +56,41 @@ export function ConfirmPickupPanel() {
 
   const handleResend = () => {
     sendOTP();
+  };
+  const handleManualConfirm = async () => {
+    try {
+      toast.promise(
+        confirmPickup({
+          dropSessionId:
+            dropSession?.id ??
+            (() => {
+              throw new Error("dropSessionId is undefined");
+            })(),
+          payload: {
+            verified_by: 1, // TODO: dynamically get current user ID
+            notes: "Picked up on time",
+          },
+        }),
+        {
+          loading: "Confirming pickup...",
+          success: () => {
+            queryClient.invalidateQueries({
+              queryKey: ["drop-sessions"],
+            });
+            queryClient.invalidateQueries({
+              queryKey: ["dropOffs"],
+            });
+            return "Pickup confirmed ✅";
+          },
+          error: "Failed to confirm pickup",
+        }
+      );
+
+      queryClient.invalidateQueries({ queryKey: ["drop-sessions"] });
+      setDetailsPanelState?.(panelStateKeys.noActiveSession);
+    } catch (error) {
+      console.error("Pickup failed:", error);
+    }
   };
 
   useEffect(() => {
@@ -132,11 +176,7 @@ export function ConfirmPickupPanel() {
             </p>
             <Button
               variant="destructive"
-              onClick={() => {
-                // TODO: call backend to log manual verify
-                setStep("success");
-                setActiveDropSession?.(null);
-              }}
+              onClick={handleManualConfirm}
               className="w-full"
             >
               ✅ Manually Confirm Pickup

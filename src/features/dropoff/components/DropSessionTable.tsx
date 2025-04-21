@@ -21,7 +21,7 @@ import {
   IDropSession,
   panelStateKeys,
 } from "@/features/dropoff/types/types.dropoff";
-import { useDropSessionsByDate } from "@/features/dropoff/services/dropoff.service";
+
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
@@ -56,23 +56,26 @@ const SkeletonRow = () => (
 );
 
 export function DropSessionTable({ onRowClick }: { onRowClick?: () => void }) {
-  const { setActiveDropSession, setDetailsPanelState } =
-    useDashboardContext() || {
-      setActiveDropSession: () => {},
-    };
+  const {
+    setActiveDropSession,
+    setDetailsPanelState,
+    selectedDate,
+    setSelectedDate,
+    dropSessionsBydate,
+    isLoadingDropSessionsByDate: isLoading,
+    refetchDropSessionsByDate: refetch,
+  } = useDashboardContext() || {
+    setActiveDropSession: () => {},
+    setSelectedDate: () => {},
+    selectedDate: new Date(),
+    dropSessionsBydate: [],
+    isLoadingDropSessionsByDate: false,
+    refetchDropSessionsByDate: () => {},
+  };
 
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const [tableHeight, setTableHeight] = useState("auto");
-
-  const today = format(selectedDate, "yyyy-MM-dd");
-
-  const {
-    data: dropSessionsBydate = [],
-    isLoading,
-    refetch,
-  } = useDropSessionsByDate(today);
 
   const reversedDropSessions = [...dropSessionsBydate].reverse();
 
@@ -118,7 +121,7 @@ export function DropSessionTable({ onRowClick }: { onRowClick?: () => void }) {
         refetch();
       }
     },
-    [refetch]
+    [refetch, setSelectedDate]
   );
 
   // Generate skeleton rows for loading state

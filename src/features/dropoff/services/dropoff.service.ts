@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api-client";
 import { apiEndpoints } from "@/lib/ApiEndpoints";
 import { IDropSession, IGuardianWithPhone } from "../types/types.dropoff";
@@ -22,13 +22,8 @@ export const getGuardianByPhone = async (phone: string ) => {
 }
 
 export const useCreateDropOff = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: createDropOff,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["dropoffs"] });
-    },
+    mutationFn: createDropOff,    
   });
 };
 

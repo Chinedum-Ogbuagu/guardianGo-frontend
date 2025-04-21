@@ -23,12 +23,12 @@ export function DropSessionRow({ dropSession, onClick }: IDropSessionRow) {
         <Badge
           variant="outline"
           className={`px-2 py-1 flex items-center justify-center w-32 ${
-            dropSession.awaitingPickup === true
+            dropSession?.pickup_status === "awaiting"
               ? "bg-yellow-100 text-yellow-800 border-yellow-200"
               : "bg-green-100 text-green-800 border-green-200"
           }`}
         >
-          {dropSession.awaitingPickup === true ? (
+          {dropSession?.pickup_status === "awaiting" ? (
             <>
               <AlertTriangle className="h-3 w-3 mr-1" />
               Awaiting Pickup

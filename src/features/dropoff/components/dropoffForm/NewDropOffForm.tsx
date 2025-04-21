@@ -31,7 +31,7 @@ import { formatPhoneNumber } from "./utils";
 export function NewDropOffForm() {
   const { setDetailsPanelState } = useDashboardContext() || {};
   const queryClient = useQueryClient();
-  const churchID = 49;
+  const churchID = 1;
 
   const [animateFlash, setAnimateFlash] = useState(false);
   const [hasFetched, setHasFetched] = useState(false);

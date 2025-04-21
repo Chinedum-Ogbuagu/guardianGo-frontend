@@ -8,13 +8,14 @@ export interface IDropSession {
   note: string;
   created_at: Date;
   drop_offs: IDropOff[];
-  awaitingPickup: boolean;
+  pickup_status: string;
 }
 
 export interface IDropOff {
   id: number;
   drop_session_id: number;
   child_id: number;
+  child_name: string;
   name: string;
   class: string;
   bag_status: boolean;

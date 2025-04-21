@@ -17,6 +17,7 @@ import {
   AlertCircle,
   Briefcase,
   User,
+  KeyRound,
 } from "lucide-react";
 import { NewDropOffForm } from "../../dropoff/components/dropoffForm/NewDropOffForm";
 import { ConfirmPickupPanel } from "./ConfirmPickupPanel";
@@ -53,42 +54,39 @@ export function SessionDetailPanel() {
     guardian_phone,
     drop_offs,
     created_at,
-    awaitingPickup: isAwaitingPickup,
+    pickup_status,
   } = activeDropSession;
 
   return (
     <div className="h-full flex flex-col">
       {/* HEADER */}
-      <div className="p-6 pb-4 border-b border-muted">
-        <div className="flex justify-between items-center mb-2">
+      <div className="p-6 pb-3">
+        <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-2xl font-semibold">Drop Session</h2>
+            <h2 className="text-xl font-semibold">Drop-off Details</h2>
             <p className="text-muted-foreground text-sm">
-              Details & pickup management
+              Manage this drop-off session.
             </p>
           </div>
-          <div className="text-right">
-            <div className="text-xs text-muted-foreground">PICKUP CODE</div>
-            <Badge
-              variant="outline"
-              className="font-mono font-semibold text-lg px-2 py-1"
-            >
-              {unique_code}
-            </Badge>
-          </div>
+          <Badge
+            variant="secondary"
+            className="font-mono font-semibold text-sm px-3 py-1 flex items-center gap-1"
+          >
+            <KeyRound className="h-4 w-4" /> {unique_code}
+          </Badge>
         </div>
       </div>
 
       {/* BODY */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-6">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {/* Guardian Info */}
-        <Card className="border p-3 border-muted">
+        <Card className=" p-3 bg-transparent ">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <User className="h-4 w-4" /> Guardian Info
+            <CardTitle className="flex items-center gap-2 text-sm font-medium">
+              <User className="h-4 w-4" /> Guardian
             </CardTitle>
           </CardHeader>
-          <CardContent className="grid grid-cols-2 gap-4 text-sm">
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div>
               <div className="text-xs text-muted-foreground mb-1">Name</div>
               <div className="font-medium">{guardian_name}</div>
@@ -120,12 +118,12 @@ export function SessionDetailPanel() {
             </h3>
             <Badge
               className={`px-3 py-1 ${
-                isAwaitingPickup
+                pickup_status === "awaiting"
                   ? "bg-amber-100 text-amber-800 hover:bg-amber-200"
                   : "bg-emerald-100 text-emerald-800 hover:bg-emerald-200"
               }`}
             >
-              {isAwaitingPickup ? (
+              {pickup_status === "awaiting" ? (
                 <span className="flex items-center">
                   <Clock className="h-3 w-3 mr-1" /> Awaiting Pickup
                 </span>
@@ -139,10 +137,7 @@ export function SessionDetailPanel() {
 
           <div className="space-y-3">
             {drop_offs.map((child, idx) => (
-              <Card
-                key={idx}
-                className="border border-slate-200 dark:border-slate-800 overflow-hidden"
-              >
+              <Card key={idx} className="border border-muted overflow-hidden">
                 <div className="flex items-stretch">
                   <div
                     className={`w-1.5 ${
@@ -152,14 +147,14 @@ export function SessionDetailPanel() {
                   <div className="flex-1 p-4">
                     <div className="flex justify-between items-start">
                       <div>
-                        <h4 className="font-medium">{child.name}</h4>
+                        <h4 className="font-medium">{child.child_name}</h4>
                         <p className="text-sm text-muted-foreground">
                           Class: {child.class}
                         </p>
                       </div>
                       {child.bag_status && (
                         <div className="flex items-center bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs">
-                          <Briefcase className="h-3.5 w-3.5 mr-1" /> Has Bag
+                          <Briefcase className="h-3.5 w-3.5 mr-1" /> Bag
                         </div>
                       )}
                     </div>
@@ -178,7 +173,7 @@ export function SessionDetailPanel() {
       </div>
 
       {/* ACTION */}
-      {isAwaitingPickup && (
+      {pickup_status === "awaiting" && (
         <div className="p-6 border-t border-muted">
           <Button
             className="w-full bg-primary text-primary-foreground h-12"
