@@ -1,56 +1,70 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { verifyOtp } from "@/api/otp";
-import { useAuth } from "./useAuth";
+import { toast } from "sonner";
+import { verifyOtp } from "../otp/otp.service";
 
-export default function VerifyOTPScreen() {
+export default function VerifyScreen() {
+  const searchParams = useSearchParams();
   const router = useRouter();
-  const params = useSearchParams();
-  const phone = params.get("phone") || "";
 
+  const phone = searchParams.get("phone") || "";
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const { login } = useAuth();
 
-  const handleSubmit = async () => {
+  useEffect(() => {
+    if (!phone) {
+      toast.error("Missing phone number. Redirecting...");
+      router.push("/auth/login");
+    }
+  }, [phone]);
+
+  const handleVerify = async () => {
+    if (!/^\d{5,6}$/.test(code)) {
+      toast.error("Invalid code. Enter 5 or 6 digits.");
+      return;
+    }
+
     setLoading(true);
-    setError("");
     try {
-      const isValid = await verifyOtp(phone, code);
-      if (isValid) {
-        login({ phone });
+      const res = await verifyOtp({ phone, code });
+      toast.success("Logged in successfully");
+
+      // Save token or user to localStorage if returned
+      // if (res?.token) {
+      //   localStorage.setItem("auth_token", res.token);
+      // }
+
+      if (res) {
         router.push("/dashboard");
-      } else {
-        setError("Invalid OTP");
       }
-    } catch (err: unknown) {
+    } catch (err) {
       console.error(err);
-      setError("Something went wrong");
+      toast.error("OTP Verification failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-sm mx-auto py-12">
-      <h1 className="text-2xl font-semibold mb-4">Enter OTP</h1>
-      <p className="text-muted-foreground mb-4">Sent to {phone}</p>
+    <div className="max-w-sm mx-auto py-12 px-4">
+      <h1 className="text-2xl font-semibold mb-6 text-center">Verify OTP</h1>
+
       <Input
         type="text"
-        placeholder="Enter OTP"
+        placeholder="Enter your OTP code"
         value={code}
         onChange={(e) => setCode(e.target.value)}
         className="mb-4"
+        maxLength={6}
       />
-      <Button onClick={handleSubmit} disabled={loading}>
-        {loading ? "Verifying..." : "Verify"}
+
+      <Button onClick={handleVerify} disabled={loading} className="w-full">
+        {loading ? "Verifying..." : "Verify OTP"}
       </Button>
-      {error && <p className="text-red-500 mt-2">{error}</p>}
     </div>
   );
 }

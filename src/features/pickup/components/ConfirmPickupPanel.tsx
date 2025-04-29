@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { useConfirmPickupSession } from "../services/pickup.service";
 import { useQueryClient } from "@tanstack/react-query";
 import { panelStateKeys } from "@/features/dropoff/types/types.dropoff";
+import { useSendOtp, useVerifyOtp } from "@/features/otp/otp.service";
 
 export function ConfirmPickupPanel() {
   const {
@@ -28,12 +29,29 @@ export function ConfirmPickupPanel() {
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
   const { mutateAsync: confirmPickup } = useConfirmPickupSession();
-  console.log({ dropSession });
+  const { mutateAsync: sendOtp } = useSendOtp();
+  const { mutateAsync: verifyOtp } = useVerifyOtp();
+
   const sendOTP = async () => {
     setLoading(true);
+    toast.info(`Sending OTP to: ${dropSession?.guardian_phone ?? "unknown"}`);
     try {
-      // TODO: call backend to send OTP here
-      console.log("Sending OTP to:", dropSession?.guardian_phone);
+      sendOtp({
+        phone:
+          dropSession?.guardian_phone ??
+          (() => {
+            throw new Error("guardian_phone is undefined");
+          })(),
+        drop_off_id: dropSession?.id,
+        purpose: "pickup",
+      })
+        .then(() => {
+          toast.success("OTP sent successfully!");
+        })
+        .catch((error) => {
+          toast.error("Failed to send OTP: " + error.message);
+        });
+
       setStep("otp");
       setTimeLeft(300);
     } finally {
@@ -44,9 +62,24 @@ export function ConfirmPickupPanel() {
   const verifyOTP = async () => {
     setLoading(true);
     try {
-      // TODO: call backend to verify OTP
-      console.log("Verifying OTP:", otp);
-      setStep("success");
+      await verifyOtp({
+        phone:
+          dropSession?.guardian_phone ??
+          (() => {
+            throw new Error("guardian_phone is undefined");
+          })(),
+        code: otp,
+        purpose: "pickup",
+      })
+        .then(() => {
+          toast.success("OTP verified successfully!");
+          handleManualConfirm();
+          setStep("success");
+        })
+        .catch((error) => {
+          toast.error("Failed to verify OTP: " + error.message);
+        });
+
       // update session state or refetch table
       setActiveDropSession?.(null);
     } finally {
@@ -163,7 +196,11 @@ export function ConfirmPickupPanel() {
           </div>
 
           <div className="flex justify-between mt-2">
-            <Button variant="outline" onClick={handleResend} disabled={loading}>
+            <Button
+              variant="outline"
+              onClick={handleResend}
+              disabled={loading || timeLeft > 0}
+            >
               Resend OTP
             </Button>
             <Button onClick={verifyOTP} disabled={loading || otp.length < 4}>

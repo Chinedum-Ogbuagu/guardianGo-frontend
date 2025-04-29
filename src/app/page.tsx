@@ -50,7 +50,7 @@ export default function Home() {
           <Button
             variant="outline"
             className="dark:bg-slate-100 light:bg-black  text-black hover:bg-white hover:text-black border border-border"
-            onClick={() => router.push("/dashboard")}
+            onClick={() => router.push("/login")}
           >
             Open App
           </Button>
