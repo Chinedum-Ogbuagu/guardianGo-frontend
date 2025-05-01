@@ -78,7 +78,7 @@ export function DropSessionStats() {
                 </p>
               </div>
               <div className="h-8 w-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                <Clock className="h-4 w-4 text-amber-500 dark:text-slate-400" />
+                <Clock className="h-4 w-4 text-purple-600 dark:text-slate-400" />
               </div>
             </div>
           </CardContent>
@@ -101,7 +101,7 @@ export function DropSessionStats() {
                 </p>
               </div>
               <div className="h-8 w-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                <CheckCircle className="h-4 w-4 text-emerald-500 dark:text-slate-400" />
+                <CheckCircle className="h-4 w-4 text-indigo-600 dark:text-slate-400" />
               </div>
             </div>
           </CardContent>

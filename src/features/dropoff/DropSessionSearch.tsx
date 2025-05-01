@@ -38,10 +38,11 @@ export function DropSessionSearch({
       </div>
 
       <Button
-        className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
+        className="bg-transparent border-2 border-indigo-600 text-indigo-600 hover:text-white hover:bg-indigo-600 font-medium px-4 py-2 rounded-md transition-all duration-300 ease-in-out group"
         onClick={() => setDetailsPanelState(panelStateKeys.newDropSession)}
       >
-        <Plus className="h-4 w-4 mr-1" /> New Drop-Off
+        <Plus className="h-4 w-4 mr-2 transition-transform duration-300 group-hover:rotate-90" />
+        New Drop-Off
       </Button>
     </div>
   );
