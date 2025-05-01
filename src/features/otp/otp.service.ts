@@ -16,7 +16,7 @@ type VerifyOtpPayload = {
 export async function sendOtp({
   phone,
   drop_off_id,
-  purpose = "login",
+  purpose = "",
 }: SendOtpPayload) {
   const res = await api.post("/api/otp/send", {
     phone,

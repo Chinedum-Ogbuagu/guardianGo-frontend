@@ -13,11 +13,11 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
-} from "../../../../components/ui/form";
-import { Input } from "../../../../components/ui/input";
-import { Button } from "../../../../components/ui/button";
-import { useDashboardContext } from "../../../../lib/dashboard-context";
-import { Checkbox } from "../../../../components/ui/checkbox";
+} from "../../../components/ui/form";
+import { Input } from "../../../components/ui/input";
+import { Button } from "../../../components/ui/button";
+import { useDashboardContext } from "../../../lib/dashboard-context";
+import { Checkbox } from "../../../components/ui/checkbox";
 import { Trash2Icon } from "lucide-react";
 import {
   useCreateDropOff,
@@ -31,7 +31,9 @@ import { formatPhoneNumber } from "./utils";
 export function NewDropOffForm() {
   const { setDetailsPanelState } = useDashboardContext() || {};
   const queryClient = useQueryClient();
-  const churchID = 1;
+  const churchID = JSON.parse(
+    localStorage.getItem("user") || "null"
+  )?.church_id;
 
   const [animateFlash, setAnimateFlash] = useState(false);
   const [hasFetched, setHasFetched] = useState(false);
@@ -259,7 +261,7 @@ export function NewDropOffForm() {
                   type="button"
                   variant="destructive"
                   size="icon"
-                  className="absolute top-3 right-2 rounded-full shadow-md bg-white dark:bg-zinc-700 hover:bg-slate-100 dark:hover:bg-slate-700"
+                  className="absolute top-3 right-2 rounded-full shadow-md bg-white dark:bg-zinc-700 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700"
                   onClick={() => remove(index)}
                 >
                   <Trash2Icon className="h-4 w-4 text-red-300 " />

@@ -1,5 +1,6 @@
 "use client";
-import { useDashboardContext } from "../../../lib/dashboard-context";
+import { useState, useEffect } from "react";
+import { useDashboardContext } from "../../lib/dashboard-context";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, Plus } from "lucide-react";
@@ -13,14 +14,26 @@ export function DropSessionSearch({
   const { setDetailsPanelState } = useDashboardContext() || {
     setDetailsPanelState: () => {},
   };
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      onChange(searchTerm.trim());
+    }, 600);
+
+    return () => clearTimeout(timeout);
+  }, [searchTerm, onChange]);
+
   return (
     <div className="flex justify-between items-center mb-4">
       <div className="relative w-1/3">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Search by phone or code..."
+          placeholder="Search Sessions by phone or code..."
           className="pl-9 pr-4"
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          value={searchTerm}
         />
       </div>
 

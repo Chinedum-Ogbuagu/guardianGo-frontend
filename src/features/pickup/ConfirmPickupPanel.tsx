@@ -8,11 +8,11 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
-import { Button } from "../../../components/ui/button";
-import { useDashboardContext } from "../../../lib/dashboard-context";
-import { Badge } from "../../../components/ui/badge";
+import { Button } from "../../components/ui/button";
+import { useDashboardContext } from "../../lib/dashboard-context";
+import { Badge } from "../../components/ui/badge";
 import { toast } from "sonner";
-import { useConfirmPickupSession } from "../services/pickup.service";
+import { useConfirmPickupSession } from "./services/pickup.service";
 import { useQueryClient } from "@tanstack/react-query";
 import { panelStateKeys } from "@/features/dropoff/types/types.dropoff";
 import { useSendOtp, useVerifyOtp } from "@/features/otp/otp.service";

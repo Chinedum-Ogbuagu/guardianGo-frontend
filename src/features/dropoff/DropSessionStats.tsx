@@ -1,13 +1,13 @@
 "use client";
 
-import { Card, CardContent } from "../../../components/ui/card";
+import { Card, CardContent } from "../../components/ui/card";
 import { Users, Clock, CheckCircle } from "lucide-react";
-import { Skeleton } from "../../../components/ui/skeleton";
+import { Skeleton } from "../../components/ui/skeleton";
 import {
   getTotalDropOffs,
   getTotalDropOffsForAwaitingSessions,
   getTotalDropOffsForCompletedSessions,
-} from "./utils";
+} from "./utils/utils";
 import { useDashboardContext } from "@/lib/dashboard-context";
 
 export function DropSessionStats() {
@@ -89,7 +89,7 @@ export function DropSessionStats() {
       {isLoadingDropSessionsByDate || isErrorDropSessionsByDate ? (
         <SkeletonCard />
       ) : (
-        <Card className="bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-slate-800 ">
+        <Card className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-slate-800 ">
           <CardContent className="py-3">
             <div className="flex justify-between items-center">
               <div>

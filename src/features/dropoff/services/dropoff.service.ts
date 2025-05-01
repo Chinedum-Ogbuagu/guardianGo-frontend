@@ -11,6 +11,10 @@ export const createDropOff = async (payload: any) => {
   return response.data;
 };
 
+export const getDropSessionByCode = async (code: string) => {
+  const response = await api.get(`/api/dropoff/session/code/${code}`);
+  return response.data;
+}
 
 export const getDropSessionsByDate = async (date: string): Promise<IDropSession[]> => {
   const response = await api.get(`/api/dropoff/sessions?date=${date}`);
@@ -45,3 +49,11 @@ export const useGetGuardianByPhone = (phone: string,  options?: RQueryOptions<IG
     ...options
   })
 }
+
+export const useGetDropSessionByCode = (code: string) => {
+  return useQuery({
+    queryKey: ["drop-session", code],
+    queryFn: () => getDropSessionByCode(code),
+    enabled: !!code,
+  });
+};

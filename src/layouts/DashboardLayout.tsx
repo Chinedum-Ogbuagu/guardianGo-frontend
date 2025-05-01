@@ -1,7 +1,7 @@
 "use client";
 import { SidebarStats } from "@/components/SidebarStats";
-import { DropSessionTable } from "@/features/dropoff/components/DropSessionTable";
-import { SessionDetailPanel } from "@/features/pickup/components/SessionDetailPanel";
+import { DropSessionManager } from "@/features/dropoff/DropSessiontable/DropSessionManager";
+import { SessionDetailPanel } from "@/features/pickup/SessionDetailPanel";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { DashboardProvider } from "@/lib/dashboard-context";
 import { Button } from "@/components/ui/button";
@@ -88,7 +88,7 @@ export default function DashboardLayout() {
           </aside>
 
           {/* Main content with gradient */}
-          <main className="flex-1 overflow-y-auto bg-gradient-to-b from-slate to-zinc-100 dark:bg-gradient-to-b dark:from-zinc-900 dark:to-zinc-800">
+          <main className="flex-1 overflow-y-auto bg-gradient-to-b from-slate to-zinc-100 dark:bg-gradient-to-b dark:from-zinc-900 dark:to-zinc-950">
             <div className="p-3 md:p-4 h-full flex flex-col">
               <div className="flex-none pb-4 border-b mb-5 bg-gradient-to-r from-transparent via-slate-100 to-transparent dark:from-transparent dark:via-zinc-900/20 dark:to-transparent rounded-lg">
                 <div className="px-4 py-3">
@@ -102,7 +102,7 @@ export default function DashboardLayout() {
               </div>
               <div className="flex-1 overflow-hidden bg-slate-50 dark:bg-zinc-900/80 rounded-lg shadow-lg backdrop-blur-sm">
                 <div className="p-4">
-                  <DropSessionTable
+                  <DropSessionManager
                     onRowClick={
                       isMobile ? () => setShowDetailPanel(true) : undefined
                     }
@@ -113,7 +113,7 @@ export default function DashboardLayout() {
           </main>
 
           {/* Details panel - desktop */}
-          <section className="hidden md:block w-96 lg:w-96 xl:w-120  overflow-y-auto rounded-l-xl bg-gradient-to-r from-transparent via-slate-200 to-slate-50 dark:from-transparent dark:via-blue-950/20 dark:to-transparent shadow-xl backdrop-blur-lg border-l border-slate-200 dark:border-slate-800">
+          <section className="hidden md:block w-96 lg:w-96 xl:w-120  overflow-none  bg-gradient-to-r from-transparent via-slate-200 to-slate-50 dark:from-transparent dark:via-blue-950/20 dark:to-transparent shadow-xl backdrop-blur-lg border-l border-slate-200 dark:border-slate-800">
             <SessionDetailPanel />
           </section>
 
@@ -129,7 +129,7 @@ export default function DashboardLayout() {
                     variant="ghost"
                     size="icon"
                     onClick={() => setShowDetailPanel(false)}
-                    className="hover:bg-slate-300 dark:hover:bg-slate-800"
+                    className="hover:bg-slate-300  dark:hover:bg-slate-800"
                   >
                     <X className="h-5 w-5" />
                   </Button>
