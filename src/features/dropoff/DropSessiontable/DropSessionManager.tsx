@@ -68,7 +68,7 @@ export function DropSessionManager({
         const viewportHeight = window.innerHeight;
         const tableTop = tableContainerRef.current.getBoundingClientRect().top;
         // Leave some space at the bottom (e.g., 40px)
-        const availableHeight = viewportHeight - tableTop - 120;
+        const availableHeight = viewportHeight - tableTop - 135;
         const minHeight = 200; // Minimum height
         const maxHeight = 600; // Maximum height
 
