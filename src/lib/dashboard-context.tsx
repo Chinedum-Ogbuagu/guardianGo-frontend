@@ -1,6 +1,9 @@
 "use client";
 import { useDropSessionsByDate } from "@/features/dropoff/services/dropoff.service";
-import { IDropSession } from "@/features/dropoff/types/types.dropoff";
+import {
+  IDropSession,
+  PaginatedResponse,
+} from "@/features/dropoff/types/types.dropoff";
 import { createContext, useContext, useState } from "react";
 import { format } from "date-fns";
 
@@ -13,10 +16,14 @@ interface DashboardContextType {
   >;
   selectedDate: Date;
   setSelectedDate: React.Dispatch<React.SetStateAction<Date>>;
-  dropSessionsBydate: IDropSession[];
+  dropSessionsBydate: PaginatedResponse<IDropSession> | undefined;
   isLoadingDropSessionsByDate: boolean;
   isErrorDropSessionsByDate: boolean;
   refetchDropSessionsByDate: () => void;
+  page: number;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+  pageSize: number;
+  setPageSize: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const DashboardContext = createContext<DashboardContextType | null>(null);
@@ -33,13 +40,15 @@ export const DashboardProvider = ({
   );
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const today = format(selectedDate, "yyyy-MM-dd");
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   const {
-    data: dropSessionsBydate = [],
+    data: dropSessionsBydate,
     isLoading: isLoadingDropSessionsByDate,
     isError: isErrorDropSessionsByDate,
     refetch: refetchDropSessionsByDate,
-  } = useDropSessionsByDate(today);
+  } = useDropSessionsByDate(today, page, pageSize);
 
   return (
     <DashboardContext.Provider
@@ -54,6 +63,10 @@ export const DashboardProvider = ({
         isLoadingDropSessionsByDate,
         isErrorDropSessionsByDate,
         refetchDropSessionsByDate,
+        setPage,
+        page,
+        pageSize,
+        setPageSize,
       }}
     >
       {children}

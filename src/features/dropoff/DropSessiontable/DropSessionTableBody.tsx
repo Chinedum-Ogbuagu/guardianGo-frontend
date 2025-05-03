@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import React from "react";
 import { DropSessionRow } from "./DropSessionTableRow";
-import DropSessionPagination from "./DropSessionTablePagination";
+
 import { IDropSession } from "../types/types.dropoff";
 import { SkeletonRow } from "./DropSessionTableSkeletonLoader";
 
@@ -17,9 +17,6 @@ type Props = {
   isLoading: boolean;
   isError: boolean;
   dropSessions: IDropSession[];
-  pageSize: number;
-  currentPage: number;
-  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
   onRowClick: (dropSession: IDropSession) => void;
   handleDateChange: (date: Date) => void;
   selectedDate: Date;
@@ -31,9 +28,7 @@ function DropSessionTableBody({
   isLoading,
   isError,
   dropSessions,
-  pageSize,
-  currentPage,
-  setCurrentPage,
+
   onRowClick,
   handleDateChange,
   selectedDate,
@@ -45,6 +40,7 @@ function DropSessionTableBody({
       .fill(2)
       .map((_, index) => <SkeletonRow key={`skeleton-${index}`} />);
   };
+
   return (
     <Table>
       <TableBody>
@@ -123,16 +119,6 @@ function DropSessionTableBody({
           ))
         )}
       </TableBody>
-      {dropSessions?.length > pageSize && (
-        <div className="flex w-full justify-end mt-1">
-          <DropSessionPagination
-            pageSize={pageSize}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            dropSessions={dropSessions}
-          />
-        </div>
-      )}
     </Table>
   );
 }

@@ -6,8 +6,19 @@ import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { DashboardProvider } from "@/lib/dashboard-context";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, X, LayoutDashboard } from "lucide-react";
+import {
+  Menu,
+  X,
+  LayoutDashboard,
+  BellRing,
+  Settings,
+  HelpCircle,
+  Search,
+  User,
+  Shield,
+} from "lucide-react";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 export default function DashboardLayout() {
   const [isMobile, setIsMobile] = useState(false);
@@ -27,94 +38,114 @@ export default function DashboardLayout() {
 
   return (
     <DashboardProvider>
-      <div className="h-screen flex flex-col md:flex-row overflow-none bg-slate-100 dark:bg-background">
-        {/* Mobile sidebar toggle */}
-        {isMobile && (
-          <div className="bg-slate-50 dark:bg-background border-b py-3 px-4 flex items-center justify-between shadow-sm">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="bg-slate-50 dark:bg-background hover:bg-slate-100"
-                >
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="w-64 p-0">
-                <div className="h-full bg-slate-200 dark:bg-muted p-4 flex flex-col justify-between">
-                  <div className="space-y-1 mb-6">
-                    <div className="flex items-center space-x-2 mb-6">
-                      <LayoutDashboard className="h-5 w-5 text-blue-600" />
-                      <h1 className="text-lg font-semibold">Child Pickup</h1>
-                    </div>
-                    <SidebarStats />
-                  </div>
-                  <div className="mt-4">
-                    <ThemeToggle />
-                  </div>
-                </div>
-              </SheetContent>
-            </Sheet>
-            <h1 className="text-lg font-semibold flex items-center">
-              <LayoutDashboard className="h-5 w-5 text-blue-600 mr-2 hidden sm:inline" />
-              Child Pickup System
-            </h1>
+      <div className="h-screen flex flex-col overflow-hidden bg-slate-200 dark:bg-zinc-950">
+        {/* Slim Top Header (ClickUp Style) */}
+        <header className="h-12 bg-slate-200/80 dark:bg-zinc-950/80  flex items-center justify-between px-3 backdrop-blur-sm z-10">
+          <div className="flex items-center">
             {isMobile && (
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => setShowDetailPanel(true)}
-                className="bg-white dark:bg-background hover:bg-slate-100"
-              >
-                <Menu className="h-5 w-5" />
-              </Button>
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="icon" className="mr-2 h-8 w-8">
+                    <Menu className="h-4 w-4" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="left" className="w-64 p-0">
+                  <div className="h-full bg-slate-200 dark:bg-muted p-4 flex flex-col justify-between">
+                    <div className="space-y-1 mb-6">
+                      <div className="flex items-center space-x-2 mb-6">
+                        <LayoutDashboard className="h-5 w-5 text-blue-600" />
+                        <h1 className="text-lg font-semibold">Child Pickup</h1>
+                      </div>
+                      <SidebarStats />
+                    </div>
+                    <div className="mt-4">
+                      <ThemeToggle />
+                    </div>
+                  </div>
+                </SheetContent>
+              </Sheet>
             )}
+            <div className="flex items-center">
+              <Link href="/" className="font-bold text-xl flex items-center">
+                <Shield className="mr-2 h-6 w-6 text-indigo-600 dark:text-indigo-400" />
+                <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent dark:from-indigo-400 dark:via-purple-400 dark:to-pink-400">
+                  GuardianGo
+                </span>
+              </Link>
+            </div>
           </div>
-        )}
+
+          <div className="hidden md:flex flex-1 max-w-md mx-6">
+            <div className="relative w-full">
+              <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search..."
+                className="w-full h-8 bg-slate-100 dark:bg-zinc-800 rounded-md pl-8 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-slate-600 dark:text-slate-400"
+            >
+              <BellRing className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-slate-600 dark:text-slate-400"
+            >
+              <HelpCircle className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-slate-600 dark:text-slate-400"
+            >
+              <Settings className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-slate-600 dark:text-slate-400"
+            >
+              <div className="h-6 w-6 rounded-full bg-blue-500 flex items-center justify-center">
+                <User className="h-3 w-3 text-white" />
+              </div>
+            </Button>
+            <ThemeToggle />
+          </div>
+        </header>
 
         <div className="flex flex-1 overflow-hidden">
           {/* Desktop sidebar - NARROWER */}
-          <aside className="hidden md:flex w-28 xl:w-32 border-r flex-col justify-between bg-slate-200 dark:bg-muted shadow-sm">
+          <aside className="hidden md:flex  flex-col ml-2 my-2 rounded-2xl justify-between bg-white dark:bg-zinc-900/50 z-10 transition-all duration-200 border border-slate-300 dark:border-slate-800 overflow-hidden">
             <div className="p-3 space-y-6">
-              <div className="flex flex-col items-center pb-4 border-b">
-                <LayoutDashboard className="h-6 w-6 text-blue-600 mb-1" />
-                <h1 className="text-sm font-semibold text-center">
-                  Child Pickup
-                </h1>
-              </div>
               <SidebarStats />
             </div>
           </aside>
 
           {/* Main content with gradient */}
-          <main className="flex-1 overflow-y-auto bg-gradient-to-b from-slate to-zinc-100 dark:bg-gradient-to-b dark:from-zinc-900 dark:to-zinc-950">
-            <div className="p-3 md:p-4 h-full flex flex-col">
-              <div className="flex-none pb-4 border-b mb-5 bg-gradient-to-r from-transparent via-slate-100 to-transparent dark:from-transparent dark:via-zinc-900/20 dark:to-transparent rounded-lg">
-                <div className="px-4 py-3">
-                  <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
-                    Drop Sessions
-                  </h2>
-                  <p className="text-sm text-slate-500 dark:text-muted-foreground mt-1">
-                    Manage child drop-offs and pickups
-                  </p>
-                </div>
-              </div>
-              <div className="flex-1 overflow-hidden bg-slate-50 dark:bg-zinc-900/80 rounded-lg shadow-lg backdrop-blur-sm">
-                <div className="p-4">
-                  <DropSessionManager
-                    onRowClick={
-                      isMobile ? () => setShowDetailPanel(true) : undefined
-                    }
-                  />
-                </div>
+          <main className="flex-1 flex flex-col bg-white dark:bg-zinc-900 rounded-lg my-2 border border-slate-300 dark:border-slate-800 ml-2 z-20 shadow-lg">
+            <div className="flex-1 p-4 flex flex-col">
+              <div className="h-full p-3 flex flex-col">
+                <DropSessionManager
+                  onRowClick={
+                    isMobile ? () => setShowDetailPanel(true) : undefined
+                  }
+                />
               </div>
             </div>
           </main>
 
-          {/* Details panel - desktop */}
-          <section className="hidden md:block w-96 lg:w-96 xl:w-120  overflow-none  bg-gradient-to-r from-transparent via-slate-200 to-slate-50 dark:from-transparent dark:via-blue-950/20 dark:to-transparent shadow-xl backdrop-blur-lg border-l border-slate-200 dark:border-slate-800">
-            <SessionDetailPanel />
+          <section className="hidden md:flex flex-col w-96 lg:w-96 xl:w-120  **: my-2 rounded-lg mx-2 bg-white dark:bg-zinc-900/50 shadow-xl backdrop-blur-lg border border-slate-300 dark:border-slate-800">
+            <div className="flex-1 overflow-y-auto">
+              <SessionDetailPanel />
+            </div>
           </section>
 
           {/* Mobile details panel */}
@@ -129,7 +160,7 @@ export default function DashboardLayout() {
                     variant="ghost"
                     size="icon"
                     onClick={() => setShowDetailPanel(false)}
-                    className="hover:bg-slate-300  dark:hover:bg-slate-800"
+                    className="hover:bg-slate-300 dark:hover:bg-slate-800"
                   >
                     <X className="h-5 w-5" />
                   </Button>

@@ -2,7 +2,7 @@ import { api } from "@/lib/api-client";
 import { useMutation } from "@tanstack/react-query";
 
 type requestOtpPayload = {
-  phone: number;
+  phone: string;
   name: string;
   drop_off_id?: number;
   purpose?: string;
@@ -10,7 +10,7 @@ type requestOtpPayload = {
 };
 
 type VerifyOtpAndLoginPayload = {
-  phone: number;
+  phone: string;
   code: string;
   purpose?: string;
 };

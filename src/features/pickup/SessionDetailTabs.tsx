@@ -56,11 +56,11 @@ function SessionDetailTabs({
       {/* Details Tab */}
       <TabsContent
         value="details"
-        className="flex-1 overflow-y-auto p-4 bg-indigo-50/50 dark:bg-indigo-950/10"
+        className="flex-1 overflow-y-auto p-4 bg-indigo-50/50 dark:bg-zinc-900"
       >
         <Card className="mb-4 border-none shadow-sm">
           <CardContent className="p-0">
-            <div className="p-4 flex items-center space-x-4 bg-white dark:bg-gray-900 rounded-t-lg">
+            <div className="p-4 flex items-center space-x-4 bg-white dark:bg-zinc-950/80 rounded-t-lg">
               <Avatar className="h-14 w-14 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium">
                 <span>
                   {guardian_name
@@ -78,7 +78,7 @@ function SessionDetailTabs({
 
             <Separator />
 
-            <div className="p-4 space-y-3 bg-white dark:bg-gray-900 rounded-b-lg">
+            <div className="p-4 space-y-3 bg-white  dark:bg-zinc-950/80 rounded-b-lg">
               <div className="flex items-center">
                 <Phone className="h-4 w-4 text-indigo-600 dark:text-indigo-400 mr-3" />
                 <div>
@@ -113,7 +113,7 @@ function SessionDetailTabs({
           </CardContent>
         </Card>
 
-        <div className="bg-white dark:bg-gray-900 rounded-lg p-4 shadow-sm">
+        <div className="bg-white  dark:bg-zinc-950/80 rounded-lg p-4 shadow-sm">
           <h3 className="text-sm font-medium mb-3 text-muted-foreground uppercase tracking-wider">
             Quick Actions
           </h3>
@@ -143,7 +143,7 @@ function SessionDetailTabs({
       {/* Children Tab */}
       <TabsContent
         value="children"
-        className="flex-1 overflow-y-auto p-4 space-y-3 bg-indigo-50/50 dark:bg-indigo-950/10"
+        className="flex-1 overflow-y-auto p-4 space-y-3 bg-indigo-50/50  dark:bg-zinc-900"
       >
         {drop_offs.map((child, idx) => (
           <Card key={idx} className="overflow-hidden shadow-sm border-none">
@@ -155,7 +155,7 @@ function SessionDetailTabs({
                     : "bg-gray-300 dark:bg-gray-700"
                 }`}
               />
-              <div className="flex-1 p-4 bg-white dark:bg-gray-900">
+              <div className="flex-1 p-4 bg-white  dark:bg-zinc-950/80">
                 <div className="flex justify-between items-start">
                   <div className="flex items-center">
                     <Avatar

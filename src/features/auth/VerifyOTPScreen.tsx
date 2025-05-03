@@ -30,7 +30,7 @@ export default function VerifyScreen() {
   // const inputRefs = useRef([]);
 
   // Format phone for display
-  const formatPhoneForDisplay = (value) => {
+  const formatPhoneForDisplay = (value: string) => {
     const digits = value.replace(/\D/g, "");
     if (digits.length <= 4) return digits;
     if (digits.length <= 7) return `${digits.slice(0, 4)} ${digits.slice(4)}`;
@@ -46,22 +46,26 @@ export default function VerifyScreen() {
 
   // Timer for resend functionality
   useEffect(() => {
-    const timer =
-      timeLeft > 0 &&
-      !canResend &&
-      setInterval(() => {
-        setTimeLeft((prevTime) => prevTime - 1);
-      }, 1000);
+    const timer: NodeJS.Timeout | null =
+      timeLeft > 0 && !canResend
+        ? setInterval(() => {
+            setTimeLeft((prevTime) => prevTime - 1);
+          }, 1000)
+        : null;
 
     if (timeLeft === 0 && !canResend) {
       setCanResend(true);
     }
 
-    return () => clearInterval(timer);
+    return () => {
+      if (timer) {
+        clearInterval(timer);
+      }
+    };
   }, [timeLeft, canResend]);
 
   // Handle input of OTP code
-  const handleCodeChange = (e) => {
+  const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     const numericInput = input.replace(/\D/g, "").slice(0, 6);
     setCode(numericInput);
@@ -71,7 +75,7 @@ export default function VerifyScreen() {
     }
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: { key: string }) => {
     if (e.key === "Enter" && code.length >= 5) {
       handleVerify();
     }

@@ -60,18 +60,34 @@ export interface IGuardianWithPhone {
   ];
 }
 export interface DropOffChild {
-  children: {
-    className: string;
-    name: string;
-    hasBag: boolean;
-    note: string;
-  };
+  className: string;
+  name: string;
+  hasBag: boolean;
+  note: string;
 }
+
 export interface DropOffDTO {
+  phone: string;
   church_id: number;
   guardian: {
     name: string;
     phone: string;
   };
-  children: DropOffChild;
+  children: DropOffChild[];
+}
+export interface PaginatedResponse<T> {
+  data: T[];
+  total_count: number;
+  page: number;
+  page_size: number;
+}
+export interface FormData {
+  phone: string;
+  guardian: string;
+  children: {
+    name: string;
+    className: string;
+    hasBag: boolean;
+    note?: string;
+  }[];
 }

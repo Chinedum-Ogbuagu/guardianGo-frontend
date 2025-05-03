@@ -8,20 +8,28 @@ import {
   getTotalDropOffsForAwaitingSessions,
   getTotalDropOffsForCompletedSessions,
 } from "./utils/utils";
+import { useDropSessionsByDate } from "./services/dropoff.service";
+
+import { format } from "date-fns";
 import { useDashboardContext } from "@/lib/dashboard-context";
 
 export function DropSessionStats() {
+  const dashboardContext = useDashboardContext();
+  const selectedDate = dashboardContext?.selectedDate || new Date();
+  const today = format(selectedDate, "yyyy-MM-dd");
   const {
-    dropSessionsBydate,
-    isLoadingDropSessionsByDate,
-    isErrorDropSessionsByDate,
-  } = useDashboardContext() || {};
+    data: dropSessionsBydate,
+    isLoading: isLoadingDropSessionsByDate,
+    isError: isErrorDropSessionsByDate,
+  } = useDropSessionsByDate(today) || {};
 
-  const totalDropOffSessions = getTotalDropOffs(dropSessionsBydate);
-  const awaitingPickupSessions =
-    getTotalDropOffsForAwaitingSessions(dropSessionsBydate);
-  const completedPickupSessions =
-    getTotalDropOffsForCompletedSessions(dropSessionsBydate);
+  const totalDropOffSessions = getTotalDropOffs(dropSessionsBydate?.data);
+  const awaitingPickupSessions = getTotalDropOffsForAwaitingSessions(
+    dropSessionsBydate?.data
+  );
+  const completedPickupSessions = getTotalDropOffsForCompletedSessions(
+    dropSessionsBydate?.data
+  );
 
   const SkeletonCard = () => (
     <Card className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-slate-800 ">
@@ -38,7 +46,7 @@ export function DropSessionStats() {
   );
 
   return (
-    <div className="grid grid-cols-3 gap-4 mb-4">
+    <div className="grid grid-cols-3 gap-4 mb-2">
       {/* Total */}
       {isLoadingDropSessionsByDate || isErrorDropSessionsByDate ? (
         <SkeletonCard />

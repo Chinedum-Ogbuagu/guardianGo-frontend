@@ -1,11 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useForm, useFieldArray } from "react-hook-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-
 import {
   Form,
   FormField,
@@ -23,7 +21,11 @@ import {
   useCreateDropOff,
   useGetGuardianByPhone,
 } from "@/features/dropoff/services/dropoff.service";
-import { panelStateKeys } from "@/features/dropoff/types/types.dropoff";
+import {
+  DropOffChild,
+  DropOffDTO,
+  panelStateKeys,
+} from "@/features/dropoff/types/types.dropoff";
 import { useEffect, useState } from "react";
 import { dropOffSchema } from "./dropoffSchema";
 import { formatPhoneNumber } from "./utils";
@@ -86,12 +88,19 @@ export function NewDropOffForm() {
       if (data.children?.length) {
         form.setValue(
           "children",
-          data.children.map((child: any) => ({
-            name: child.name,
-            className: child.class,
-            hasBag: child.bag,
-            note: child.note,
-          }))
+          data.children.map(
+            (child: {
+              name: string;
+              class: string;
+              bag: boolean;
+              note: string;
+            }) => ({
+              name: child.name,
+              className: child.class,
+              hasBag: child.bag,
+              note: child.note,
+            })
+          )
         );
         setAnimateFlash(true);
       }
@@ -107,14 +116,14 @@ export function NewDropOffForm() {
     }
   }, [isSuccess, isError, data?.guardian, data?.children, form, hasFetched]);
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: DropOffDTO) => {
     const payload = {
       church_id: churchID,
       guardian: {
         name: data.guardian,
         phone: data.phone,
       },
-      children: data.children.map((child: any) => ({
+      children: data.children.map((child: DropOffChild) => ({
         name: child.name,
         class: child.className,
         bag: child.hasBag,
@@ -122,7 +131,7 @@ export function NewDropOffForm() {
       })),
     };
 
-    return toast.promise(createDropOff(payload), {
+    return toast.promise(createDropOff(payload as unknown as DropOffDTO), {
       loading: "Creating Drop-Off...",
       success: (response) => {
         queryClient.invalidateQueries({ queryKey: ["drop-sessions"] });
@@ -281,7 +290,7 @@ export function NewDropOffForm() {
           </Button>
         </div>
 
-        <div className="flex items-center space-x-4">
+        <div className="sticky bottom-0 bg-background p-2 border-t border-muted flex items-center space-x-4 z-10">
           <Button type="submit" className="flex-1" disabled={isSubmitting}>
             {isSubmitting ? "Submitting..." : "Submit Drop-Off"}
           </Button>

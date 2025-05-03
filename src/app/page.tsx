@@ -288,7 +288,7 @@ export default function Home() {
                 <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl blur-md opacity-20 animate-pulse"></div>
                 <div className="relative bg-background rounded-2xl overflow-hidden border border-border shadow-xl">
                   <Image
-                    src="/dashboard-preview3.png"
+                    src="/image_fx.png"
                     alt="App dashboard preview"
                     width={800}
                     height={500}

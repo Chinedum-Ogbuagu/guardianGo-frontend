@@ -22,6 +22,7 @@ import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import DropSessionTableHeader from "./DropSessionTableHeader";
 import DropSessionTableBody from "./DropSessionTableBody";
+import DropSessionPagination from "./DropSessionTablePagination";
 
 export function DropSessionManager({
   onRowClick,
@@ -38,11 +39,14 @@ export function DropSessionManager({
     isLoadingDropSessionsByDate: isLoading,
     refetchDropSessionsByDate: refetch,
     isErrorDropSessionsByDate,
+    page: currentPage,
+    setPage,
+    pageSize,
   } = useDashboardContext() || {
     setActiveDropSession: () => {},
     setSelectedDate: () => {},
     selectedDate: new Date(),
-    dropSessionsBydate: [],
+    dropSessionsBydate: undefined,
     isLoadingDropSessionsByDate: false,
     refetchDropSessionsByDate: () => {},
   };
@@ -54,10 +58,8 @@ export function DropSessionManager({
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const [tableHeight, setTableHeight] = useState("auto");
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
 
-  const reversedDropSessions = [...dropSessionsBydate].reverse();
+  const reversedDropSessions = [...(dropSessionsBydate?.data || [])].reverse();
 
   // Calculate and set table height based on available space
   useEffect(() => {
@@ -66,9 +68,9 @@ export function DropSessionManager({
         const viewportHeight = window.innerHeight;
         const tableTop = tableContainerRef.current.getBoundingClientRect().top;
         // Leave some space at the bottom (e.g., 40px)
-        const availableHeight = viewportHeight - tableTop - 100;
+        const availableHeight = viewportHeight - tableTop - 120;
         const minHeight = 200; // Minimum height
-        const maxHeight = 800; // Maximum height
+        const maxHeight = 600; // Maximum height
 
         // Set height between min and max, but responsive to viewport
         const idealHeight = Math.max(
@@ -161,10 +163,10 @@ export function DropSessionManager({
         />
       </div>
       <Card
-        className="p-3 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-slate-800 shadow-md rounded-xl overflow-hidden"
+        className="p-3 bg-white gap-0 dark:bg-zinc-900 border border-slate-200 dark:border-slate-800 shadow-md rounded-xl overflow-hidden"
         ref={tableContainerRef}
       >
-        <div className="relative">
+        <div className="relative ">
           {/* Fixed header */}
           <DropSessionTableHeader />
 
@@ -183,9 +185,6 @@ export function DropSessionManager({
               isLoading={isLoading || isLoadingDropSessionsByCode}
               isError={isErrorDropSessionsByDate || isErrorDropSessionsByCode}
               onRowClick={handleRowClick}
-              pageSize={pageSize}
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
               handleDateChange={handleDateChange}
               selectedDate={selectedDate}
               refetch={refetch}
@@ -193,6 +192,15 @@ export function DropSessionManager({
             />
           </div>
         </div>
+        {(dropSessionsBydate?.total_count ?? 0) > (pageSize ?? 10) && (
+          <div className="flex justify-end bg-indigo-50 dark:bg-zinc-900 border rounded-b-xl mt-1">
+            <DropSessionPagination
+              pageSize={pageSize ?? 10}
+              currentPage={currentPage}
+              setCurrentPage={setPage}
+            />
+          </div>
+        )}
       </Card>
     </div>
   );

@@ -1,12 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api-client";
 import { apiEndpoints } from "@/lib/ApiEndpoints";
-import { IDropSession, IGuardianWithPhone } from "../types/types.dropoff";
+import {
+  DropOffDTO,
+  IDropSession,
+  IGuardianWithPhone,
+  PaginatedResponse,
+} from "../types/types.dropoff";
 import { Phone } from "lucide-react";
 import { RQueryOptions } from "@/lib/utils";
 
-export const createDropOff = async (payload: any) => {
+export const createDropOff = async (payload: DropOffDTO) => {
   const response = await api.post(apiEndpoints.dropoff, payload);
   return response.data;
 };
@@ -14,41 +18,57 @@ export const createDropOff = async (payload: any) => {
 export const getDropSessionByCode = async (code: string) => {
   const response = await api.get(`/api/dropoff/session/code/${code}`);
   return response.data;
-}
-
-export const getDropSessionsByDate = async (date: string): Promise<IDropSession[]> => {
-  const response = await api.get(`/api/dropoff/sessions?date=${date}`);
-  return response.data.data;
 };
-export const getGuardianByPhone = async (phone: string ) => {
+
+type DropSessionsResponse = PaginatedResponse<IDropSession>;
+
+export const getDropSessionsByDate = async (
+  date: string,
+  page?: number,
+  pageSize?: number
+): Promise<DropSessionsResponse> => {
+  let url = `/api/dropoff/sessions?date=${date}`;
+  if (page && pageSize) {
+    url += `&page=${page}&page_size=${pageSize}`;
+  }
+  const response = await api.get(url);
+  return response.data as DropSessionsResponse;
+};
+export const getGuardianByPhone = async (phone: string) => {
   const response = await api.get(`/api/guardians/with-children/${phone}`);
-  return response.data
-}
+  return response.data;
+};
 
 export const useCreateDropOff = () => {
   return useMutation({
-    mutationFn: createDropOff,    
+    mutationFn: createDropOff,
   });
 };
 
-
-export const useDropSessionsByDate = (date: string) => {
-  return useQuery({
-    queryKey: ["drop-sessions", date],
-    queryFn: () => getDropSessionsByDate(date),
-    enabled: !!date, 
+export const useDropSessionsByDate = (
+  date: string,
+  page?: number,
+  pageSize?: number
+) => {
+  return useQuery<DropSessionsResponse, Error>({
+    queryKey: ["drop-sessions", date, page, pageSize],
+    queryFn: () => getDropSessionsByDate(date, page, pageSize),
+    enabled: !!date,
   });
 };
 
-export const useGetGuardianByPhone = (phone: string,  options?: RQueryOptions<IGuardianWithPhone>) => {
+export const useGetGuardianByPhone = (
+  phone: string,
+  options?: RQueryOptions<IGuardianWithPhone>
+) => {
   return useQuery({
     queryKey: ["guardianDetailsByPhone", Phone],
     queryFn: () => getGuardianByPhone(phone),
     enabled: false,
     retry: false,
-    ...options
-  })
-}
+    ...options,
+  });
+};
 
 export const useGetDropSessionByCode = (code: string) => {
   return useQuery({

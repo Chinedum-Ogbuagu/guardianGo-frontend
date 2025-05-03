@@ -6,27 +6,28 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import React from "react";
-import { IDropSession } from "../types/types.dropoff";
+
+import { useDashboardContext } from "@/lib/dashboard-context";
 
 type Props = {
-  currentPage: number;
-  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
-  dropSessions: IDropSession[];
+  currentPage: number | undefined;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>> | undefined;
+
   pageSize: number;
 };
 
 function DropSessionPagination({
   currentPage,
   setCurrentPage,
-  dropSessions,
   pageSize,
 }: Props) {
+  const { dropSessionsBydate } = useDashboardContext() || {};
   return (
     <Pagination>
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
-            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            onClick={() => setCurrentPage?.((p) => Math.max(1, p - 1))}
             className={
               currentPage === 1 ? "pointer-events-none opacity-50" : ""
             }
@@ -34,18 +35,23 @@ function DropSessionPagination({
         </PaginationItem>
         <PaginationItem>
           <span className="px-4 py-2 text-sm text-muted-foreground">
-            Page {currentPage} of {Math.ceil(dropSessions.length / pageSize)}
+            Page {currentPage} of{" "}
+            {Math.ceil((dropSessionsBydate?.total_count ?? 0) / pageSize)}
           </span>
         </PaginationItem>
         <PaginationItem>
           <PaginationNext
             onClick={() =>
-              setCurrentPage((p) =>
-                Math.min(Math.ceil(dropSessions.length / pageSize), p + 1)
+              setCurrentPage?.((p) =>
+                Math.min(
+                  Math.ceil((dropSessionsBydate?.total_count ?? 0) / pageSize),
+                  p + 1
+                )
               )
             }
             className={
-              currentPage === Math.ceil(dropSessions.length / pageSize)
+              currentPage ===
+              Math.ceil((dropSessionsBydate?.total_count ?? 0) / pageSize)
                 ? "pointer-events-none opacity-50"
                 : ""
             }
