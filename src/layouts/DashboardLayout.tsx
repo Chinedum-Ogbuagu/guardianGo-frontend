@@ -142,7 +142,7 @@ export default function DashboardLayout() {
             </div>
           </main>
 
-          <section className="hidden md:flex flex-col w-96 lg:w-96 xl:w-120  **: my-2 rounded-lg mx-2 bg-white dark:bg-zinc-900/50 shadow-xl backdrop-blur-lg border border-slate-300 dark:border-slate-800">
+          <section className="hidden md:flex flex-col w-96 lg:w-96 xl:w-120  **: my-2 rounded-lg mx-2 bg-white dark:bg-zinc-900 shadow-xl backdrop-blur-lg border border-slate-300 dark:border-slate-800">
             <div className="flex-1 overflow-y-auto">
               <SessionDetailPanel />
             </div>

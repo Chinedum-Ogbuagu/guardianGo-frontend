@@ -25,7 +25,7 @@ export function SessionDetailPanel() {
     detailsPanelState === panelStateKeys.noActiveSession
   ) {
     return (
-      <div className="flex items-center rounded-lg justify-center h-full bg-white dark:bg-zinc-900/50 p-6 ">
+      <div className="flex items-center rounded-lg justify-center h-full bg-white dark:bg-zinc-900 p-6 ">
         <div className="text-center space-y-4">
           <div className="w-16 h-16 bg-gradient-to-r from-indigo-600 to-pink-600 rounded-full flex items-center justify-center mx-auto shadow-md">
             <Users className="h-8 w-8 text-white" />
@@ -79,7 +79,7 @@ export function SessionDetailPanel() {
 
       {/* Action Footer */}
       {pickup_status === "awaiting" && (
-        <div className="p-4 border-t border-gray-200 dark:border-gray-800 rounded-lg bg-white dark:bg-zinc-950/80">
+        <div className="p-4 border-t border-gray-200 dark:border-gray-800 rounded-b-lg bg-transparent">
           <Button
             className="w-full h-12 bg-gradient-to-r from-indigo-600 via-indigo-700 to-indigo-800 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700 text-white font-medium"
             onClick={() => {

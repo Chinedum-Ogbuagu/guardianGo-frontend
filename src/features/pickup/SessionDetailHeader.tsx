@@ -13,7 +13,7 @@ type Props = {
 function SessionDetailHeader({ unique_code, pickup_status }: Props) {
   const { setDetailsPanelState } = useDashboardContext() || {};
   return (
-    <div className="p-2 rounded-lg dark:bg-zinc-900 ">
+    <div className="p-2 rounded-lg dark:bg-zinc-900/50 ">
       <div className="flex items-center justify-between">
         <Button
           variant="ghost"
