@@ -175,24 +175,60 @@
 
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #888;
+  background-color: rgba(148, 163, 184, 0.4); /* slate-300 with opacity */
   border-radius: 8px;
-  border: 2px solid #fff;
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #555;
+  background-color: rgba(100, 116, 139, 0.6); /* slate-500 with opacity */
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #f1f1f1;
+  background-color: rgba(226, 232, 240, 0.3); /* slate-200 with opacity */
+  border-radius: 8px;
 }
 
-::-webkit-scrollbar-corner {
-  background-color: transparent;
+/* Dark Mode Scrollbar */
+.dark ::-webkit-scrollbar-thumb {
+  background-color: rgba(71, 85, 105, 0.4); /* slate-600 with opacity */
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(100, 116, 139, 0.6); /* slate-500 with opacity */
+}
+
+.dark ::-webkit-scrollbar-track {
+  background-color: rgba(30, 41, 59, 0.2); /* slate-800 with opacity */
+  border-radius: 8px;
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.4) rgba(226, 232, 240, 0.3);
+}
+
+.dark * {
+  scrollbar-color: rgba(71, 85, 105, 0.4) rgba(30, 41, 59, 0.2);
+}
+
+/* Optional: Hide scrollbar when not in use but allow scrolling */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 @keyframes fadeIn {
