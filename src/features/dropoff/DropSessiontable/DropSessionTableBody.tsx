@@ -28,7 +28,6 @@ function DropSessionTableBody({
   isLoading,
   isError,
   dropSessions,
-
   onRowClick,
   handleDateChange,
   selectedDate,
@@ -36,8 +35,8 @@ function DropSessionTableBody({
   setSelectedDate,
 }: Props) {
   const renderSkeletonRows = () => {
-    return Array(8)
-      .fill(2)
+    return Array(10)
+      .fill(3)
       .map((_, index) => <SkeletonRow key={`skeleton-${index}`} />);
   };
 
@@ -109,7 +108,6 @@ function DropSessionTableBody({
             </TableCell>
           </TableRow>
         ) : (
-          dropSessions &&
           dropSessions?.map((dropSession: IDropSession) => (
             <DropSessionRow
               key={dropSession.unique_code}

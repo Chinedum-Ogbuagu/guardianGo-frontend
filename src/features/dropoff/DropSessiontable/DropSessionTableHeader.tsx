@@ -7,7 +7,7 @@ function DropSessionTableHeader() {
       <Table>
         <TableHeader className="border-b border-slate-200 dark:border-slate-800">
           <TableRow className="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-zinc-900 dark:to-zinc-800">
-            <TableHead className="w-[10%] text-indigo-700 dark:text-indigo-400 font-medium">
+            <TableHead className="w-[15%] text-indigo-700 dark:text-indigo-400 font-medium">
               Code
             </TableHead>
             <TableHead className="w-[25%] text-indigo-700 dark:text-indigo-400 font-medium">
@@ -19,7 +19,7 @@ function DropSessionTableHeader() {
             <TableHead className="w-[10%] text-indigo-700 dark:text-indigo-400 font-medium">
               Children
             </TableHead>
-            <TableHead className="w-[20%] text-indigo-700 dark:text-indigo-400 font-medium">
+            <TableHead className="w-[25%] text-indigo-700 dark:text-indigo-400 font-medium">
               Status
             </TableHead>
             <TableHead className="w-[20%] text-indigo-700 dark:text-indigo-400 font-medium">
