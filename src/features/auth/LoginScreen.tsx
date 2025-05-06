@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { useGetUserByPhone } from "../user/user.service";
 
 import { Phone, User, Key, ArrowRight, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -30,13 +29,6 @@ export default function LoginScreen() {
   const formatPhone = useCallback(
     (value: string) => value.replace(/\D/g, "").slice(0, 11),
     []
-  );
-  const {
-    data: userData,
-    isLoading: isUserLoading,
-    error: userError,
-  } = useGetUserByPhone(
-    formatPhone(phone).length === 11 ? formatPhone(phone) : ""
   );
 
   const validatePhone = useCallback(
@@ -64,6 +56,7 @@ export default function LoginScreen() {
     if (digits.length <= 7) return `${digits.slice(0, 4)} ${digits.slice(4)}`;
     return `${digits.slice(0, 4)} ${digits.slice(4, 7)} ${digits.slice(7)}`;
   };
+
   const fetchInviteDetails = useCallback(
     async (code: string) => {
       try {
@@ -108,13 +101,6 @@ export default function LoginScreen() {
     }));
   }, [name, phone, validatePhone]);
 
-  // Auto-fill name if user exists
-  useEffect(() => {
-    if (userData && userData.name && !inviteUsed && !name) {
-      setName(userData.name);
-    }
-  }, [userData, inviteUsed, name]);
-
   const handleSubmit = async () => {
     const cleanedPhone = formatPhone(phone);
 
@@ -157,9 +143,11 @@ export default function LoginScreen() {
           },
           error: (error) => {
             if (axios.isAxiosError(error) && error.response) {
-              return `${error.response.data.error || "Please try again."}`;
+              return `${
+                error.response.data.error || "Login Error:  Please try again."
+              }`;
             }
-            return "Failed to send verification code";
+            return "Login Error: Please try again.";
           },
         }
       );
@@ -175,19 +163,11 @@ export default function LoginScreen() {
     }
   };
 
-  // Check if the user exists with the entered phone number
-  const userExists = !!userData;
-
   // Disable the button if:
   // 1. Form is submitting
-  // 2. Phone number is valid but user doesn't exist (unless invite code is used)
-  // 3. Form has validation errors
+  // 2. Form has validation errors
   const isButtonDisabled =
-    isSubmitting ||
-    isUserLoading ||
-    (formatPhone(phone).length === 11 && !userExists && !inviteCode) ||
-    !!formErrors.name ||
-    !!formErrors.phone;
+    isSubmitting || !!formErrors.name || !!formErrors.phone;
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center px-4">
@@ -247,15 +227,6 @@ export default function LoginScreen() {
             {formErrors.phone && (
               <p className="text-red-500 text-xs ml-1">{formErrors.phone}</p>
             )}
-            {formatPhone(phone).length === 11 &&
-              !userError &&
-              !userExists &&
-              !inviteCode && (
-                <p className="text-amber-500 text-xs ml-1">
-                  No account found with this phone number. Please use an invite
-                  code.
-                </p>
-              )}
           </div>
 
           {showInviteField && (
@@ -298,12 +269,6 @@ export default function LoginScreen() {
               <span className="flex items-center justify-center">
                 <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                 Sending...
-              </span>
-            ) : formatPhone(phone).length === 11 &&
-              !userExists &&
-              !inviteCode ? (
-              <span className="flex items-center justify-center">
-                Account Required
               </span>
             ) : (
               <span className="flex items-center justify-center">

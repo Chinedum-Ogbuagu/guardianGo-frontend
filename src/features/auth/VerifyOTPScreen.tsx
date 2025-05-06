@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { Loader2, CheckCircle, ArrowLeft, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useGetUserByPhone } from "../user/user.service";
-import { verifyOtpAndLogin } from "./services/auth.service";
+import { useRequestOtp, verifyOtpAndLogin } from "./services/auth.service";
 
 export default function VerifyScreen() {
   const searchParams = useSearchParams();
@@ -26,7 +26,7 @@ export default function VerifyScreen() {
   const [inputError, setInputError] = useState("");
   const [resendLoading, setResendLoading] = useState(false);
   const { data: userData } = useGetUserByPhone(phone);
-
+  const { mutateAsync: requestOtp } = useRequestOtp();
   // const inputRefs = useRef([]);
 
   // Format phone for display
@@ -85,17 +85,11 @@ export default function VerifyScreen() {
     setResendLoading(true);
     try {
       toast.promise(
-        fetch("/api/resend-otp", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            phone,
-            name: decodeURIComponent(name),
-            purpose: token ? "invite" : "login",
-            token: token || undefined,
-          }),
+        requestOtp({
+          phone,
+          name: decodeURIComponent(name),
+          purpose: token ? "invite" : "login",
+          token: token || undefined,
         }),
         {
           loading: "Resending verification code...",
@@ -108,7 +102,7 @@ export default function VerifyScreen() {
       setTimeLeft(60);
       setCanResend(false);
     } catch (error) {
-      console.error(error);
+      toast.error(error);
     } finally {
       setResendLoading(false);
     }
@@ -134,7 +128,6 @@ export default function VerifyScreen() {
         // Save token or user data here if needed
         // localStorage.setItem("auth_token", res.token);
         localStorage.setItem("user", JSON.stringify(userData));
-        localStorage.setItem("token", res.token);
 
         if (res) {
           router.push("/dashboard");

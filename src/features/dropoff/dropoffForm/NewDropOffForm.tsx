@@ -290,7 +290,7 @@ export function NewDropOffForm() {
           </Button>
         </div>
 
-        <div className="sticky bottom-0 bg-background p-2 border-t border-muted flex items-center space-x-4 z-10">
+        <div className="sticky bottom-0 bg-transparent p-2 border-t border-muted flex items-center space-x-4 z-10">
           <Button type="submit" className="flex-1" disabled={isSubmitting}>
             {isSubmitting ? "Submitting..." : "Submit Drop-Off"}
           </Button>

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   Home,
@@ -16,17 +16,48 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 import { InviteUserModal } from "@/features/user/InviteUserModal";
 import { AddChurchModal } from "@/features/church/AddChurchModal";
+import { toast } from "sonner";
+import { useLogout } from "@/features/auth/services/auth.service";
+
+interface JWTPayload {
+  userId: string;
+  role?: string;
+  exp: number;
+}
 
 export function SidebarStats() {
   const [inviteUserModalOpen, setinviteUserModalOpen] = useState(false);
-  const role = JSON.parse(localStorage.getItem("user") || "null")?.role;
+  const [role, setRole] = useState<string | undefined>(undefined);
   const [addChurchModalOpen, setAddChurchModalOpen] = useState(false);
+  const { mutateAsync: logout } = useLogout(); // Assuming you have a logout function in your auth service
+
+  const handleLogout = () => {
+    logout(); // Call the logout function to handle the logout process
+    // Cookies.remove("auth_token"); // Remove the auth cookie
+    // window.location.href = "/auth/login"; // Redirect to login page
+  };
+
+  useEffect(() => {
+    const authToken = Cookies.get("auth_token"); // Get the name of your auth cookie
+
+    if (authToken) {
+      try {
+        const decodedToken = jwtDecode<JWTPayload>(authToken);
+        setRole(decodedToken?.role);
+        console.log({ role });
+      } catch (error) {
+        toast.error("Error decoding JWT:", error);
+        // Handle invalid token, e.g., redirect to login or clear cookie
+      }
+    }
+  }, []); // Run this effect once after the initial render
   const shouldShowInviteButton =
     role === "super_admin" || role === "church_admin";
-
   return (
     <>
       <InviteUserModal
@@ -144,6 +175,7 @@ export function SidebarStats() {
                   <Button
                     variant="ghost"
                     size="icon"
+                    onClick={handleLogout}
                     className="h-auto py-2 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30"
                   >
                     <LogOut className="h-5 w-5" />

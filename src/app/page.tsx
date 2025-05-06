@@ -31,14 +31,7 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const handleOpenAppClick = () => {
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
-    if (token && token !== "null") {
-      router.push("/dashboard");
-    } else {
-      router.push("/login");
-    }
+    router.push("/login");
   };
 
   // Handle scroll for sticky header effect

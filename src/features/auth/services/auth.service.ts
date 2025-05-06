@@ -45,6 +45,11 @@ export async function verifyOtpAndLogin({
   return res.data; // Expected: { user, token }
 }
 
+export async function logout() {
+  const res = await api.post("/api/auth/logout");
+  return res.data; // Expected: { message: "logged out" }
+}
+
 export function useRequestOtp() {
   return useMutation({
     mutationFn: (payload: requestOtpPayload) => requestOtp(payload),
@@ -55,5 +60,11 @@ export function useVerifyOtpAndLogin() {
   return useMutation({
     mutationFn: (payload: VerifyOtpAndLoginPayload) =>
       verifyOtpAndLogin(payload),
+  });
+}
+
+export function useLogout() {
+  return useMutation({
+    mutationFn: () => logout(),
   });
 }
