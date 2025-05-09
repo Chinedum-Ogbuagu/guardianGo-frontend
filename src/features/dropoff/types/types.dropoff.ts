@@ -9,6 +9,7 @@ export interface IDropSession {
   created_at: Date;
   drop_offs: IDropOff[];
   pickup_status: string;
+  photo_url: string;
 }
 
 export interface IDropOff {

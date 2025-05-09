@@ -1,11 +1,8 @@
 "use client";
 
 import { useDashboardContext } from "../../lib/dashboard-context";
-
 import { Button } from "../../components/ui/button";
-
 import { Users, CheckCircle } from "lucide-react";
-
 import { NewDropOffForm } from "../dropoff/dropoffForm/NewDropOffForm";
 import { ConfirmPickupPanel } from "./ConfirmPickupPanel";
 import { panelStateKeys } from "@/features/dropoff/types/types.dropoff";
@@ -61,25 +58,29 @@ export function SessionDetailPanel() {
   });
 
   return (
-    <div className=" flex flex-col h-full">
-      {/* Header */}
-      <SessionDetailHeader
-        unique_code={unique_code}
-        pickup_status={pickup_status}
-      />
+    <div className="flex flex-col h-full">
+      {/* Fixed Header */}
+      <div className="sticky top-0 z-10">
+        <SessionDetailHeader
+          unique_code={unique_code}
+          pickup_status={pickup_status}
+        />
+      </div>
 
-      {/* Tabs */}
-      <SessionDetailTabs
-        guardian_name={guardian_name}
-        drop_offs={drop_offs}
-        formattedDate={formattedDate}
-        formattedTime={formattedTime}
-        guardian_phone={guardian_phone}
-      />
+      {/* Scrollable Content Area */}
+      <div className="flex-1 overflow-y-auto">
+        <SessionDetailTabs
+          guardian_name={guardian_name}
+          drop_offs={drop_offs}
+          formattedDate={formattedDate}
+          formattedTime={formattedTime}
+          guardian_phone={guardian_phone}
+        />
+      </div>
 
-      {/* Action Footer */}
+      {/* Fixed Footer */}
       {pickup_status === "awaiting" && (
-        <div className="p-4 border-t border-gray-200 dark:border-gray-800 rounded-b-lg bg-transparent">
+        <div className="sticky bottom-0 p-4 border-t border-gray-200 dark:border-gray-800 rounded-b-lg bg-white dark:bg-zinc-900">
           <Button
             className="w-full h-12 bg-gradient-to-r from-indigo-600 via-indigo-700 to-indigo-800 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700 text-white font-medium"
             onClick={() => {

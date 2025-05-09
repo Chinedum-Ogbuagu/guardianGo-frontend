@@ -5,15 +5,5 @@ export const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-});
-
-// Automatically add token from localStorage before each request
-api.interceptors.request.use((config) => {
-  if (typeof window !== "undefined") {
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-  }
-  return config;
+  withCredentials: true,
 });

@@ -35,7 +35,7 @@ function DropSessionTableBody({
   setSelectedDate,
 }: Props) {
   const renderSkeletonRows = () => {
-    return Array(10)
+    return Array(5)
       .fill(3)
       .map((_, index) => <SkeletonRow key={`skeleton-${index}`} />);
   };

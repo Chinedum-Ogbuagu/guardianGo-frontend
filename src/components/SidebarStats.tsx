@@ -24,9 +24,10 @@ import { AddChurchModal } from "@/features/church/AddChurchModal";
 import { toast } from "sonner";
 import { useLogout } from "@/features/auth/services/auth.service";
 
-interface JWTPayload {
+export interface JWTPayload {
   userId: string;
   role?: string;
+  church_id?: string;
   exp: number;
 }
 
@@ -37,9 +38,8 @@ export function SidebarStats() {
   const { mutateAsync: logout } = useLogout(); // Assuming you have a logout function in your auth service
 
   const handleLogout = () => {
-    logout(); // Call the logout function to handle the logout process
-    // Cookies.remove("auth_token"); // Remove the auth cookie
-    // window.location.href = "/auth/login"; // Redirect to login page
+    logout();
+    window.location.href = "/auth/login"; // Redirect to login page
   };
 
   useEffect(() => {
@@ -49,13 +49,13 @@ export function SidebarStats() {
       try {
         const decodedToken = jwtDecode<JWTPayload>(authToken);
         setRole(decodedToken?.role);
-        console.log({ role });
       } catch (error) {
-        toast.error("Error decoding JWT:", error);
+        toast.error(`Cannot get user ${error}`);
+        window.location.href = "/auth/login";
         // Handle invalid token, e.g., redirect to login or clear cookie
       }
     }
-  }, []); // Run this effect once after the initial render
+  }, []);
   const shouldShowInviteButton =
     role === "super_admin" || role === "church_admin";
   return (
@@ -125,10 +125,7 @@ export function SidebarStats() {
                 <p>View reports</p>
               </TooltipContent>
             </Tooltip>
-          </div>
 
-          {/* Additional Options */}
-          <div className="mt-8 w-full space-y-6">
             {shouldShowInviteButton && ( // Only render if condition is met
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -148,10 +145,9 @@ export function SidebarStats() {
                 </TooltipContent>
               </Tooltip>
             )}
-          </div>
 
-          {/* Bottom Actions */}
-          <div className="mt-auto w-full space-y-6 pb-2">
+            {/* Bottom Actions */}
+
             <Tooltip>
               <TooltipTrigger asChild>
                 <div className="flex flex-col items-center">
@@ -180,7 +176,6 @@ export function SidebarStats() {
                   >
                     <LogOut className="h-5 w-5" />
                   </Button>
-                  <span className="text-xs mt-1 text-red-500">Sign out</span>
                 </div>
               </TooltipTrigger>
               <TooltipContent side="right">

@@ -2,8 +2,20 @@ import { useDashboardContext } from "@/lib/dashboard-context";
 import React from "react";
 import { panelStateKeys } from "../dropoff/types/types.dropoff";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, CheckCircle, KeyRound, X } from "lucide-react";
+import {
+  AlertTriangle,
+  CheckCircle,
+  KeyRound,
+  X,
+  ArrowLeft,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type Props = {
   unique_code: string;
@@ -12,44 +24,83 @@ type Props = {
 
 function SessionDetailHeader({ unique_code, pickup_status }: Props) {
   const { setDetailsPanelState } = useDashboardContext() || {};
-  return (
-    <div className="p-2 rounded-t-lg dark:bg-zinc-900/50 border-b dark:border-zinc-800 bg-white/50 ">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl ml-2 ">Session Details</h2>
 
-        <Button
-          variant="ghost"
-          size="sm"
-          className="text-blck dark:text-white hover:bg-white/20 p-1 h-8 w-8"
-          onClick={() => setDetailsPanelState?.(panelStateKeys.noActiveSession)}
-        >
-          <X className="h-3 w-3" />
-        </Button>
+  const isPickedUp = pickup_status !== "awaiting";
+
+  return (
+    <div className="sticky top-0 z-10 backdrop-blur-sm border-b dark:border-zinc-800 rounded-t-lg">
+      {/* Top section with title and close button */}
+      <div className="flex items-center justify-between p-4">
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="flex items-center gap-1.5 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+            onClick={() =>
+              setDetailsPanelState?.(panelStateKeys.noActiveSession)
+            }
+            aria-label="Back to sessions"
+          >
+            <ArrowLeft className="h-4 w-4 mr-1" />
+            <span>Back</span>
+          </Button>
+        </div>
+
+        {/* Centered title */}
+        <h2 className="text-lg font-medium absolute left-1/2 transform -translate-x-1/2">
+          Session Details
+        </h2>
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                onClick={() =>
+                  setDetailsPanelState?.(panelStateKeys.noActiveSession)
+                }
+                aria-label="Close panel"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Close panel</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
 
-      <div className="mt-2 px-2">
-        <div className="flex items-center justify-between mt-1 mb-2">
-          <Badge className="font-bold text-md p-1 rounded-lg bg-white/20 hover:bg-white/30 text-black dark:text-white border-none flex items-center gap-1">
-            <KeyRound className="h-3 w-3" /> {unique_code}
-          </Badge>
-          <Badge className="bg-white/20 hover:bg-white/30  text-fuchsia-950 rounded-lg dark:text-white border-none p-2">
-            {pickup_status === "awaiting" ? (
-              <>
-                <AlertTriangle className="h-3.5 w-3.5 mr-1 text-yellow-700 dark:text-yellow-400" />
-                <span className="font-medium text-yellow-800 dark:text-yellow-300">
-                  Awaiting Pickup
-                </span>
-              </>
-            ) : (
-              <>
-                <CheckCircle className="h-3.5 w-3.5 mr-1.5 text-green-700 dark:text-green-400" />
-                <span className="font-medium text-green-800 dark:text-green-300">
-                  Picked Up
-                </span>
-              </>
-            )}
+      {/* Session status information */}
+      <div className="px-4 pb-3 flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center">
+          <Badge
+            className="py-1.5 px-2.5 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700
+                     text-zinc-900 dark:text-zinc-200 flex items-center gap-1.5"
+          >
+            <KeyRound className="h-3.5 w-3.5 text-zinc-500 dark:text-zinc-400" />
+            <span className="font-medium">{unique_code}</span>
           </Badge>
         </div>
+
+        <Badge
+          className={`py-1.5 px-2.5 flex items-center gap-1.5 ${
+            isPickedUp
+              ? "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300"
+              : "bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300"
+          }`}
+        >
+          {isPickedUp ? (
+            <CheckCircle className="h-3.5 w-3.5" />
+          ) : (
+            <AlertTriangle className="h-3.5 w-3.5" />
+          )}
+          <span className="font-medium">
+            {isPickedUp ? "Picked Up" : "Awaiting Pickup"}
+          </span>
+        </Badge>
       </div>
     </div>
   );

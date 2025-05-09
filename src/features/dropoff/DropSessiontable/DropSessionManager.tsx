@@ -68,8 +68,8 @@ export function DropSessionManager({
         const viewportHeight = window.innerHeight;
         const tableTop = tableContainerRef.current.getBoundingClientRect().top;
         // Leave some space at the bottom (e.g., 40px)
-        const availableHeight = viewportHeight - tableTop - 135;
-        const minHeight = 320; // Minimum height
+        const availableHeight = viewportHeight - tableTop - 145;
+        const minHeight = 300; // Minimum height
         const maxHeight = 600; // Maximum height
 
         // Set height between min and max, but responsive to viewport
@@ -175,7 +175,7 @@ export function DropSessionManager({
             className="overflow-auto"
             style={{
               height: tableHeight,
-              minHeight: "320px", // Ensure a minimum height
+              minHeight: "300px", // Ensure a minimum height
             }}
           >
             <DropSessionTableBody

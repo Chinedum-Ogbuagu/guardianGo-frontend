@@ -31,7 +31,7 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const handleOpenAppClick = () => {
-    router.push("/login");
+    router.push("/auth/login");
   };
 
   // Handle scroll for sticky header effect

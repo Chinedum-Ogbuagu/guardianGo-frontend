@@ -9,7 +9,10 @@ import { toast } from "sonner";
 import { Loader2, CheckCircle, ArrowLeft, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useGetUserByPhone } from "../user/user.service";
-import { useRequestOtp, verifyOtpAndLogin } from "./services/auth.service";
+import { useRequestOtp, useVerifyOtpAndLogin } from "./services/auth.service";
+import axios from "axios";
+
+import DashboardLoadingSkeleton from "@/components/DashboardLoadingSkeleton";
 
 export default function VerifyScreen() {
   const searchParams = useSearchParams();
@@ -24,9 +27,11 @@ export default function VerifyScreen() {
   const [timeLeft, setTimeLeft] = useState(60);
   const [canResend, setCanResend] = useState(false);
   const [inputError, setInputError] = useState("");
+  const [verificationSuccess, setVerificationSuccess] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const { data: userData } = useGetUserByPhone(phone);
   const { mutateAsync: requestOtp } = useRequestOtp();
+  const { mutateAsync: verifyOtp } = useVerifyOtpAndLogin();
   // const inputRefs = useRef([]);
 
   // Format phone for display
@@ -102,7 +107,12 @@ export default function VerifyScreen() {
       setTimeLeft(60);
       setCanResend(false);
     } catch (error) {
-      toast.error(error);
+      if (axios.isAxiosError(error) && error.response) {
+        toast.error(
+          `${error.response.data.error || "Login Error:  Please try again."}`
+        );
+      }
+      toast.error("Verification Error: Please try again.");
     } finally {
       setResendLoading(false);
     }
@@ -116,23 +126,19 @@ export default function VerifyScreen() {
 
     setLoading(true);
     try {
-      const res = await verifyOtpAndLogin({ phone, code });
-
-      // Success animation before redirect
+      const res = await verifyOtp({ phone, code });
       toast.success("Verification successful!", {
         duration: 2000,
       });
 
-      // Add a slight delay before redirect for better UX
-      setTimeout(() => {
-        // Save token or user data here if needed
-        // localStorage.setItem("auth_token", res.token);
-        localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem("user", JSON.stringify(userData));
+      setVerificationSuccess(true);
 
-        if (res) {
+      if (res.message === "login successful") {
+        setTimeout(() => {
           router.push("/dashboard");
-        }
-      }, 1000);
+        }, 1500);
+      }
     } catch (err) {
       console.error(err);
       setInputError("Invalid code. Please check and try again.");
@@ -145,6 +151,10 @@ export default function VerifyScreen() {
   const goBackToLogin = () => {
     router.push("/auth/login");
   };
+
+  if (verificationSuccess) {
+    return <DashboardLoadingSkeleton />;
+  }
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center px-4">
